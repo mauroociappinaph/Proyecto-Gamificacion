@@ -81,7 +81,7 @@ function checkTool(tool: ToolCheck): boolean {
 function checkEnvironmentVariables(): boolean {
   console.log("\n🔍 Verificando variables de entorno...");
 
-  const envFile = ".env.example";
+  const envFile = "apps/backend/.env.example";
   if (!existsSync(envFile)) {
     console.log(`⚠️  Archivo ${envFile} no encontrado`);
     return false;
