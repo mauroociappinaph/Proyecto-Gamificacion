@@ -1,0 +1,127 @@
+# Guía de Contribución - Proyecto GRAVITAD MVP
+
+## 🚀 Primer Paso Obligatorio: Verificación de Entorno
+
+**ANTES** de comenzar cualquier trabajo de desarrollo, es **OBLIGATORIO** ejecutar el script de verificación de entorno:
+
+```bash
+pnpm check-env
+```
+
+Este script verifica que todas las herramientas necesarias estén instaladas y configuradas correctamente:
+
+- ✅ **Node.js** (v18.0.0+)
+- ✅ **pnpm** (v8.0.0+)
+- ✅ **Docker** (para MongoDB, Redis)
+- ✅ **Git** (control de versiones)
+- ✅ **GitHub CLI** (gestión de repositorios)
+- ✅ **Variables de entorno** (.env.example)
+- ✅ **Servicios Docker** (corriendo)
+- ✅ **Autenticación GitHub** (gh auth login)
+
+### ⚠️ Si el script falla:
+
+1. **NO continúes** con el desarrollo
+2. **Instala/configura** las herramientas faltantes
+3. **Ejecuta nuevamente** `pnpm check-env`
+4. **Solo cuando pase** puedes proceder
+
+## 📋 Convenciones del Proyecto
+
+### Estructura de Ramas
+
+- **`main`**: Entorno de producción
+- **`develop`**: Rama principal de desarrollo
+- **`feature/T-XXX-<descripcion>`**: Cada tarea principal en su propia rama
+
+### Convención de Commits
+
+```
+feat(T-XXX): descripción corta
+fix(T-XXX): descripción corta
+```
+
+**Scopes permitidos:**
+
+- `T-DISC`, `T-SETUP`, `T-QA`, `T-CI`
+- `T-BE-SETUP`, `T-BE-SEC`, `T-AUTH-CLERK`
+- `T-BE-GAME`, `T-BE-PAY`, `T-BE-RANK`, `T-BE-SUPPORT`, `T-BE-IA`
+- `T-FE-SETUP-SHADCN`, `T-FE-SETUP-AXIOS`, `T-FE-SETUP-ZUSTAND`
+- `T-FE-02`, `T-FE-03`, `T-FE-05`, `T-FE-06`, `T-FE-07`, `T-FE-08`
+- `T-QA-INT`, `T-RELEASE`, `T-IA`, `T-SEC`, `T-INFRA`
+
+### Flujo de Trabajo
+
+1. **Commit por Subtarea**: Al finalizar cada subtarea individual
+2. **PR por Tarea Principal**: Al completar todas las subtareas de una tarea principal
+3. **Verificación Obligatoria**: Cada implementación debe probarse antes del commit
+
+### Nomenclatura
+
+- **Carpetas y archivos**: `kebab-case`
+- **Barrel Files**: Usar `index.ts` en raíz de cada paquete en `packages/`
+- **Tipos compartidos**: En `packages/common-types/src/interfaces/`
+
+### Manejo de Asincronía
+
+- **Siempre** usar `async/await`
+- **Evitar** `.then()` anidados
+- **Manejo de errores** consistente con `try...catch`
+
+## 🛠️ Herramientas de Desarrollo
+
+### Scripts Disponibles
+
+```bash
+# Verificar entorno local (OBLIGATORIO para nuevos desarrolladores)
+pnpm check-env
+
+# Desarrollo (cuando esté configurado)
+pnpm dev:frontend
+pnpm dev:backend
+
+# Build y tests (cuando esté configurado)
+pnpm build
+pnpm test
+```
+
+### MCP Tools Disponibles
+
+- **fast-filesystem**: Operaciones de sistema de archivos
+- **github**: Gestión de repositorios, issues, PRs
+- **context7**: Documentación de librerías
+- **shadcn**: Componentes UI
+- **stripe**: Integración de pagos
+- **TestSprite**: Generación y ejecución de tests
+- **chrome-devtools**: Testing y debugging
+
+## 📚 Documentación
+
+- **Plan Detallado**: `Plan_Ejecucion_Detallado.md`
+- **Arquitectura**: `docs/arquitectura-tecnica.md`
+- **Flujos de Usuario**: `docs/flujos-criticos-usuario.md`
+- **KPIs**: `docs/metricas-exito-kpis.md`
+- **Módulos Técnicos**: `docs/modulos-tecnicos-contratos.md`
+
+## 🤝 Proceso de Contribución
+
+1. **Ejecutar** `pnpm check-env` (OBLIGATORIO)
+2. **Crear rama** desde `develop`: `feature/T-XXX-<descripcion>`
+3. **Implementar** siguiendo las convenciones
+4. **Probar** la funcionalidad localmente
+5. **Hacer commit** con el formato correcto
+6. **Crear PR** hacia `develop`
+7. **Esperar review** y aprobación
+8. **Mergear** y eliminar rama de feature
+
+## ❓ Soporte
+
+Si tienes dudas sobre el proceso o las convenciones:
+
+1. Revisa el `Plan_Ejecucion_Detallado.md`
+2. Consulta la documentación en `docs/`
+3. Abre una issue en GitHub para aclaraciones
+
+---
+
+**Recuerda**: `pnpm check-env` es el **primer paso obligatorio** para cualquier desarrollador nuevo. 🚀
