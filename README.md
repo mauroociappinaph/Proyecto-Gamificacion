@@ -23,3 +23,14 @@ Esto construirá las imágenes de Docker y levantará los contenedores para el f
 ## Configuración y Ejecución
 
 Para configurar y ejecutar el proyecto, por favor, consulta los `README.md` individuales en las carpetas `apps/frontend` y `apps/backend`.
+
+## Bitácora diaria de desarrollo
+
+En la carpeta `bitacora/` se generan archivos Markdown diarios para que el equipo documente
+qué hizo cada día, bloqueos y decisiones.
+
+Para crear un nuevo archivo de bitácora, podés usar:
+
+```bash
+./scripts/crear-bitacora.sh
+```

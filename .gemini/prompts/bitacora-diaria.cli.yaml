@@ -1,0 +1,102 @@
+name: “Generar sistema de bitácora diaria”
+description: |
+  Este prompt le indica a Gemini CLI que genere un sistema de bitácora diaria dentro del repositorio,
+  con scripts, plantilla, carpeta, ejemplo y documentación para que funcione desde el primer uso.
+
+inputs: []
+output:
+  type: changeset
+  description: Cambios al repositorio (archivos nuevos, modificaciones, ejemplos, scripts)
+
+steps:
+  - name: Crear carpeta de bitácora
+    action: create_directory
+    path: bitacora
+
+  - name: Crear plantilla de bitácora diaria
+    action: create_file
+    path: bitacora/plantilla-diaria.md
+    content: |
+      ---
+      date: {{ date }}
+      author: {{ author }}
+      ---
+
+      # Bitácora diaria — {{ date }}
+
+      ## 🛠 Actividades realizadas
+      - [ ]
+
+      ## 🔍 Problemas / Bloqueos
+      -
+
+      ## 🚀 Próximos pasos
+      -
+
+      ## 🧠 Notas / decisiones / aprendizajes
+      -
+
+  - name: Crear script para generar nuevo archivo de bitácora
+    action: create_file
+    path: scripts/crear-bitacora.sh
+    content: |
+      #!/usr/bin/env bash
+      # Crea un nuevo archivo de bitácora para el día actual
+      DIR="bitacora"
+      DATE=$(date +'%Y-%m-%d')
+      FILE="$DIR/$DATE.md"
+      if [ -e "$FILE" ]; then
+        echo "Ya existe el archivo de bitácora para hoy: $FILE"
+        exit 1
+      fi
+      cat bitacora/plantilla-diaria.md \
+        | sed "s/{{ date }}/$DATE/g" \
+        | sed "s/{{ author }}/\$(git config user.name)/g" \
+        > "$FILE"
+      echo "Archivo creado: $FILE"
+    mode: 0755
+
+  - name: Añadir sección al README con instrucciones
+    action: append_to_file
+    path: README.md
+    content: |
+
+      ## Bitácora diaria de desarrollo
+
+      En la carpeta `bitacora/` se generan archivos Markdown diarios para que el equipo documente
+      qué hizo cada día, bloqueos y decisiones.
+
+      Para crear un nuevo archivo de bitácora, podés usar:
+
+      ```bash
+      ./scripts/crear-bitacora.sh
+      ```
+
+  - name: Crear ejemplo de bitácora (archivo de hoy)
+    action: create_file
+    path: bitacora/{{ date }}.md
+    content: |
+      ---
+      date: {{ date }}
+      author: {{ author }}
+      ---
+
+      # Bitácora diaria — {{ date }}
+
+      ## 🛠 Actividades realizadas
+      - [x] Ejemplo: configuré la estructura de bitácora
+      - [ ] Ejemplo: comenzar módulo de pagos
+
+      ## 🔍 Problemas / Bloqueos
+      - Ninguno relevante hasta ahora
+
+      ## 🚀 Próximos pasos
+      - Continuar con integración de pagos
+      - Crear tests unitarios
+
+      ## 🧠 Notas / decisiones / aprendizajes
+      - Usar frontmatter YAML para poder parsear los archivos si es necesario
+
+  - name: Proponer commit inicial
+    action: commit
+    message: "feat(bitacora): agregar sistema de bitácora diaria con plantilla, script y ejemplo"
