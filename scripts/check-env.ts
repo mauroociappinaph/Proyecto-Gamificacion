@@ -64,14 +64,14 @@ function checkTool(tool: ToolCheck): boolean {
         (major === reqMajor && minor === reqMinor && patch < reqPatch)
       ) {
         console.log(
-          `⚠️  ${tool.name} version ${version} es menor a la requerida ${tool.minVersion}`
+          `⚠️  ${tool.name} version ${version} es menor a la requerida ${tool.minVersion}`,
         );
         return false;
       }
     }
 
     return true;
-  } catch (error) {
+  } catch {
     console.log(`❌ ${tool.name}: No encontrado`);
     console.log(`   ${tool.description}`);
     return false;
@@ -100,7 +100,7 @@ function checkDockerServices(): boolean {
       console.log("✅ Docker está corriendo");
       return true;
     }
-  } catch (error) {
+  } catch {
     console.log("❌ Docker no está corriendo");
     console.log("   Ejecuta: docker-compose up -d");
     return false;
@@ -118,7 +118,7 @@ function checkGitHubAuth(): boolean {
       console.log("✅ GitHub CLI autenticado");
       return true;
     }
-  } catch (error) {
+  } catch {
     console.log("❌ GitHub CLI no autenticado");
     console.log("   Ejecuta: gh auth login");
     return false;
