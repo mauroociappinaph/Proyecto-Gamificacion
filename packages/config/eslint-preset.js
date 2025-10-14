@@ -3,7 +3,7 @@ import tseslint from "typescript-eslint";
 import prettierConfig from "eslint-config-prettier";
 import prettierPlugin from "eslint-plugin-prettier";
 
-export default tseslint.config(
+const eslintPreset = [
   js.configs.recommended,
   ...tseslint.configs.recommended,
   {
@@ -17,4 +17,6 @@ export default tseslint.config(
       "@typescript-eslint/no-explicit-any": "warn",
     },
   },
-);
+];
+
+export default eslintPreset;
