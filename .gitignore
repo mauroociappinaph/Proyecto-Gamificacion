@@ -32,3 +32,4 @@ pnpm-debug.log*
 # macOS
 .DS_Store
 .vercel
+apps/backend/dist/
