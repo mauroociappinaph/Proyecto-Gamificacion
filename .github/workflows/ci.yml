@@ -155,7 +155,7 @@ jobs:
     if: always()
     steps:
       - name: Send Telegram notification on failure
-        if: failure() # Solo se ejecuta si el job anterior (build-and-test) falló
+        if: ${{ failure() && contains(needs.*.result, 'failure') }} # Solo se ejecuta si el job anterior (build-and-test) falló
         uses: appleboy/telegram-action@master
         with:
           to: ${{ secrets.TELEGRAM_CHAT_ID }}
@@ -171,7 +171,7 @@ jobs:
             Estado: Fallido
 
       - name: Send Telegram notification on success
-        if: success()
+        if: ${{ success() && !contains(needs.*.result, 'failure') }} # Solo se ejecuta si todos los jobs anteriores fueron exitosos
         uses: appleboy/telegram-action@master
         with:
           to: ${{ secrets.TELEGRAM_CHAT_ID }}
