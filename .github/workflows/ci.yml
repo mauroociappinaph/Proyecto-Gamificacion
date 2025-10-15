@@ -11,9 +11,8 @@ on:
       - develop
 
 jobs:
-  build-and-test:
+  setup-env:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -32,8 +31,30 @@ jobs:
       - name: Install dependencies
         run: pnpm install
 
-      - name: Run TypeScript type check
-        run: pnpm --filter backend exec tsc --noEmit && pnpm --filter frontend exec tsc --noEmit
+      - name: Upload node_modules
+        uses: actions/upload-artifact@v4
+        with:
+          name: node_modules
+          path: node_modules
+          retention-days: 1
+
+  lint-check:
+    runs-on: ubuntu-latest
+    needs: setup-env
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Download node_modules
+        uses: actions/download-artifact@v4
+        with:
+          name: node_modules
+          path: node_modules
+
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.13.1
 
       - name: Run linter
         run: pnpm lint
@@ -41,15 +62,72 @@ jobs:
       - name: Check code format with Prettier
         run: pnpm prettier --check .
 
-      - name: Run backend tests
-        run: pnpm --filter backend test
+  type-check:
+    runs-on: ubuntu-latest
+    needs: setup-env
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Download node_modules
+        uses: actions/download-artifact@v4
+        with:
+          name: node_modules
+          path: node_modules
+
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.13.1
+
+      - name: Run TypeScript type check
+        run: pnpm --filter backend exec tsc --noEmit && pnpm --filter frontend exec tsc --noEmit
+
+  build-projects:
+    runs-on: ubuntu-latest
+    needs: setup-env
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Download node_modules
+        uses: actions/download-artifact@v4
+        with:
+          name: node_modules
+          path: node_modules
+
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.13.1
 
       - name: Build projects
         run: pnpm --filter frontend --filter backend build
 
+  test-backend:
+    runs-on: ubuntu-latest
+    needs: build-projects
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Download node_modules
+        uses: actions/download-artifact@v4
+        with:
+          name: node_modules
+          path: node_modules
+
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.13.1
+
+      - name: Run backend tests
+        run: pnpm --filter backend test
+
   telegram-notification:
     runs-on: ubuntu-latest
-    needs: build-and-test
+    needs: [lint-check, type-check, build-projects, test-backend]
     if: always()
     steps:
       - name: Send Telegram notification on failure
