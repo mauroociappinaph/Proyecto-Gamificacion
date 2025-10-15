@@ -201,3 +201,7 @@ jobs:
             Autor: ${{ github.event.pull_request.user.login }}
             URL: ${{ github.event.pull_request.html_url }}
             # Comentario para forzar un cambio y disparar el pipeline
+
+      - name: Fail if any previous job failed
+        if: ${{ needs.lint-check.result == 'failure' || needs.type-check.result == 'failure' || needs.build-projects.result == 'failure' || needs.test-backend.result == 'failure' }}
+        run: exit 1
