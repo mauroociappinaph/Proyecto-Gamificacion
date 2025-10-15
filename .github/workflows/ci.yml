@@ -98,4 +98,3 @@ jobs:
             Rama destino: ${{ github.event.pull_request.base.ref }}
             Autor: ${{ github.event.pull_request.user.login }}
             URL: ${{ github.event.pull_request.html_url }}
-            # Comentario para forzar un cambio y disparar el pipeline
