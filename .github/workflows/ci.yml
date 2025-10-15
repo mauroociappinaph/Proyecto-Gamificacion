@@ -11,40 +11,67 @@ on:
       - develop
 
 jobs:
-  setup:
+  setup-dependencies:
+    name: Setup Dependencies
     runs-on: ubuntu-latest
     outputs:
-      cache-hit: ${{ steps.cache-deps.outputs.cache-hit }}
+      pnpm-store-path: ${{ steps.get-pnpm-store.outputs.store-path }}
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: "20"
-
-      - name: Cache pnpm store
-        id: cache-deps
-        uses: actions/cache@v3
-        with:
-          path: ~/.pnpm-store
-          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
-          restore-keys: |
-            ${{ runner.os }}-pnpm-store-
-
-      - name: Set up pnpm
+      - name: Set up pnpm (install pnpm tool only, no install dependencies)
         uses: pnpm/action-setup@v4
         with:
           version: 10.13.1
+          run_install: false
+
+      - name: Set up Node.js (con caché para pnpm)
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "pnpm"
+          cache-dependency-path: "pnpm-lock.yaml"
+
+      - name: Get pnpm store path
+        id: get-pnpm-store
+        run: |
+          echo "store-path=$(pnpm store path --silent)" >> $GITHUB_OUTPUT
+
+      - name: Cache pnpm store
+        uses: actions/cache@v4
+        with:
+          path: ${{ steps.get-pnpm-store.outputs.store-path }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
   lint-check:
+    name: Lint Check
     runs-on: ubuntu-latest
-    needs: setup
+    needs: setup-dependencies
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js (con caché para pnpm)
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "pnpm"
+          cache-dependency-path: "pnpm-lock.yaml"
+
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.13.1
+          run_install: false # No ejecutar pnpm install aquí, ya lo hará el paso siguiente
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
 
       - name: Run linter
         run: pnpm exec eslint .
@@ -53,35 +80,96 @@ jobs:
         run: pnpm exec prettier --check .
 
   type-check:
+    name: Type Check
     runs-on: ubuntu-latest
-    needs: setup
+    needs: setup-dependencies
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js (con caché para pnpm)
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "pnpm"
+          cache-dependency-path: "pnpm-lock.yaml"
+
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.13.1
+          run_install: false
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
 
       - name: Run TypeScript type check
-        run: pnpm --filter backend exec tsc --noEmit && pnpm --filter frontend exec tsc --noEmit
+        run: |
+          pnpm --filter backend exec tsc --noEmit
+          pnpm --filter frontend exec tsc --noEmit
 
   build-projects:
+    name: Build Projects
     runs-on: ubuntu-latest
-    needs: setup
+    needs: setup-dependencies
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js (con caché para pnpm)
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "pnpm"
+          cache-dependency-path: "pnpm-lock.yaml"
+
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.13.1
+          run_install: false
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
 
       - name: Build projects
         run: pnpm --filter frontend --filter backend build
 
   test-backend:
+    name: Test Backend
     runs-on: ubuntu-latest
     needs: build-projects
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js (con caché para pnpm)
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "pnpm"
+          cache-dependency-path: "pnpm-lock.yaml"
+
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.13.1
+          run_install: false
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
 
       - name: Run backend tests
         run: pnpm --filter backend test
 
   telegram-notification:
+    name: Telegram Notification
     runs-on: ubuntu-latest
-    needs: [lint-check, type-check, build-projects, test-backend]
+    needs:
+      - lint-check
+      - type-check
+      - build-projects
+      - test-backend
     if: always()
     steps:
       - name: Send Telegram notification on failure
@@ -114,6 +202,7 @@ jobs:
             Autor: ${{ github.actor }}
             Workflow: ${{ github.workflow }}
             URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+            Estado: Exitoso
 
       - name: Fail if any previous job failed
         if: ${{ needs.lint-check.result == 'failure' || needs.type-check.result == 'failure' || needs.build-projects.result == 'failure' || needs.test-backend.result == 'failure' }}
