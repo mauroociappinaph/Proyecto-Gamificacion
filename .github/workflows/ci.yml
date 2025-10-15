@@ -11,6 +11,25 @@ on:
       - develop
 
 jobs:
+  pull-request-notification:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    steps:
+      - name: Send Telegram notification on Pull Request
+        uses: appleboy/telegram-action@master
+        with:
+          to: ${{ secrets.TELEGRAM_CHAT_ID }}
+          token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          message: |
+            📢 Nueva Pull Request 📢
+            Repositorio: ${{ github.repository }}
+            Título: ${{ github.event.pull_request.title }}
+            Rama origen: ${{ github.event.pull_request.head.ref }}
+            Rama destino: ${{ github.event.pull_request.base.ref }}
+            Autor: ${{ github.event.pull_request.user.login }}
+            URL: ${{ github.event.pull_request.html_url }}
+            # Comentario para forzar un cambio y disparar el pipeline
+
   setup-env:
     runs-on: ubuntu-latest
     steps:
@@ -185,22 +204,6 @@ jobs:
             Workflow: ${{ github.workflow }}
             URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
             Estado: Exitoso
-
-      - name: Send Telegram notification on Pull Request
-        if: github.event_name == 'pull_request'
-        uses: appleboy/telegram-action@master
-        with:
-          to: ${{ secrets.TELEGRAM_CHAT_ID }}
-          token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-          message: |
-            📢 Nueva Pull Request 📢
-            Repositorio: ${{ github.repository }}
-            Título: ${{ github.event.pull_request.title }}
-            Rama origen: ${{ github.event.pull_request.head.ref }}
-            Rama destino: ${{ github.event.pull_request.base.ref }}
-            Autor: ${{ github.event.pull_request.user.login }}
-            URL: ${{ github.event.pull_request.html_url }}
-            # Comentario para forzar un cambio y disparar el pipeline
 
       - name: Fail if any previous job failed
         if: ${{ needs.lint-check.result == 'failure' || needs.type-check.result == 'failure' || needs.build-projects.result == 'failure' || needs.test-backend.result == 'failure' }}
