@@ -54,10 +54,19 @@ jobs:
     steps:
       - name: Send Telegram notification on failure
         if: failure() # Solo se ejecuta si el job anterior (build-and-test) falló
-        uses: appleboy/telegram-action@non-existent-branch # ERROR INTENCIONAL
+        uses: appleboy/telegram-action@master
         with:
           to: ${{ secrets.TELEGRAM_CHAT_ID }}
           token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          message: |
+            🚨 CI/CD Fallido 🚨
+            Repositorio: ${{ github.repository }}
+            Rama: ${{ github.ref_name }}
+            Commit: ${{ github.sha }}
+            Autor: ${{ github.actor }}
+            Workflow: ${{ github.workflow }}
+            URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+            Estado: Fallido
 
       - name: Send Telegram notification on success
         if: success()
