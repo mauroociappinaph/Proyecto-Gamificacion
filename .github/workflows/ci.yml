@@ -52,6 +52,21 @@ jobs:
     needs: build-and-test
     if: always()
     steps:
+      - name: Send Telegram notification on Pull Request
+        if: github.event_name == 'pull_request'
+        uses: appleboy/telegram-action@master
+        with:
+          to: ${{ secrets.TELEGRAM_CHAT_ID }}
+          token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          message: |
+            📢 Nueva Pull Request 📢
+            Repositorio: ${{ github.repository }}
+            Título: ${{ github.event.pull_request.title }}
+            Rama origen: ${{ github.event.pull_request.head.ref }}
+            Rama destino: ${{ github.event.pull_request.base.ref }}
+            Autor: ${{ github.event.pull_request.user.login }}
+            URL: ${{ github.event.pull_request.html_url }}
+
       - name: Send Telegram notification on failure
         if: needs.build-and-test.result == 'failure' # Solo se ejecuta si el job anterior (build-and-test) falló
         uses: appleboy/telegram-action@master
@@ -83,18 +98,3 @@ jobs:
             Workflow: ${{ github.workflow }}
             URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
             Estado: Exitoso
-
-      - name: Send Telegram notification on Pull Request
-        if: github.event_name == 'pull_request'
-        uses: appleboy/telegram-action@master
-        with:
-          to: ${{ secrets.TELEGRAM_CHAT_ID }}
-          token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-          message: |
-            📢 Nueva Pull Request 📢
-            Repositorio: ${{ github.repository }}
-            Título: ${{ github.event.pull_request.title }}
-            Rama origen: ${{ github.event.pull_request.head.ref }}
-            Rama destino: ${{ github.event.pull_request.base.ref }}
-            Autor: ${{ github.event.pull_request.user.login }}
-            URL: ${{ github.event.pull_request.html_url }}
