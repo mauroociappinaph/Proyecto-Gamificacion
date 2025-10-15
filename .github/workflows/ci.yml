@@ -41,25 +41,11 @@ jobs:
         with:
           node-version: "20"
 
-      - name: Get pnpm store directory
-        id: pnpm-cache-dir
-        run: |
-          echo "pnpm_cache_dir=$(pnpm store path)" >> $GITHUB_OUTPUT
-
       - name: Set up pnpm
         uses: pnpm/action-setup@v4
         with:
           version: 10.13.1
-          run_install: false # No ejecutar pnpm install aquí, solo configurar pnpm
-
-      - name: Cache pnpm dependencies
-        uses: actions/cache@v4
-        id: pnpm-cache
-        with:
-          path: ${{ steps.pnpm-cache-dir.outputs.pnpm_cache_dir }}
-          key: ${{ runner.os }}-pnpm-${{ hashFiles('**/pnpm-lock.yaml') }}
-          restore-keys: |
-            ${{ runner.os }}-pnpm-
+          cache: 'pnpm' # Habilitar el cacheo de pnpm directamente aquí
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
@@ -80,21 +66,7 @@ jobs:
         uses: pnpm/action-setup@v4
         with:
           version: 10.13.1
-          run_install: false
-
-      - name: Get pnpm store directory
-        id: pnpm-cache-dir
-        run: |
-          echo "pnpm_cache_dir=$(pnpm store path)" >> $GITHUB_OUTPUT
-
-      - name: Restore pnpm cache
-        uses: actions/cache@v4
-        id: pnpm-cache-restore
-        with:
-          path: ${{ steps.pnpm-cache-dir.outputs.pnpm_cache_dir }}
-          key: ${{ runner.os }}-pnpm-${{ hashFiles('**/pnpm-lock.yaml') }}
-          restore-keys: |
-            ${{ runner.os }}-pnpm-
+          cache: 'pnpm' # Habilitar el cacheo de pnpm directamente aquí
 
       - name: Install dependencies (if not cached)
         run: pnpm install --frozen-lockfile
@@ -121,21 +93,7 @@ jobs:
         uses: pnpm/action-setup@v4
         with:
           version: 10.13.1
-          run_install: false
-
-      - name: Get pnpm store directory
-        id: pnpm-cache-dir
-        run: |
-          echo "pnpm_cache_dir=$(pnpm store path)" >> $GITHUB_OUTPUT
-
-      - name: Restore pnpm cache
-        uses: actions/cache@v4
-        id: pnpm-cache-restore
-        with:
-          path: ${{ steps.pnpm-cache-dir.outputs.pnpm_cache_dir }}
-          key: ${{ runner.os }}-pnpm-${{ hashFiles('**/pnpm-lock.yaml') }}
-          restore-keys: |
-            ${{ runner.os }}-pnpm-
+          cache: 'pnpm' # Habilitar el cacheo de pnpm directamente aquí
 
       - name: Install dependencies (if not cached)
         run: pnpm install --frozen-lockfile
@@ -159,21 +117,7 @@ jobs:
         uses: pnpm/action-setup@v4
         with:
           version: 10.13.1
-          run_install: false
-
-      - name: Get pnpm store directory
-        id: pnpm-cache-dir
-        run: |
-          echo "pnpm_cache_dir=$(pnpm store path)" >> $GITHUB_OUTPUT
-
-      - name: Restore pnpm cache
-        uses: actions/cache@v4
-        id: pnpm-cache-restore
-        with:
-          path: ${{ steps.pnpm-cache-dir.outputs.pnpm_cache_dir }}
-          key: ${{ runner.os }}-pnpm-${{ hashFiles('**/pnpm-lock.yaml') }}
-          restore-keys: |
-            ${{ runner.os }}-pnpm-
+          cache: 'pnpm' # Habilitar el cacheo de pnpm directamente aquí
 
       - name: Install dependencies (if not cached)
         run: pnpm install --frozen-lockfile
@@ -197,21 +141,7 @@ jobs:
         uses: pnpm/action-setup@v4
         with:
           version: 10.13.1
-          run_install: false
-
-      - name: Get pnpm store directory
-        id: pnpm-cache-dir
-        run: |
-          echo "pnpm_cache_dir=$(pnpm store path)" >> $GITHUB_OUTPUT
-
-      - name: Restore pnpm cache
-        uses: actions/cache@v4
-        id: pnpm-cache-restore
-        with:
-          path: ${{ steps.pnpm-cache-dir.outputs.pnpm_cache_dir }}
-          key: ${{ runner.os }}-pnpm-${{ hashFiles('**/pnpm-lock.yaml') }}
-          restore-keys: |
-            ${{ runner.os }}-pnpm-
+          cache: 'pnpm' # Habilitar el cacheo de pnpm directamente aquí
 
       - name: Install dependencies (if not cached)
         run: pnpm install --frozen-lockfile
