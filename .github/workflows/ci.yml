@@ -45,7 +45,7 @@ jobs:
         uses: pnpm/action-setup@v4
         with:
           version: 10.13.1
-          cache: 'pnpm' # Habilitar el cacheo de pnpm directamente aquí
+          cache: true # Habilitar el cacheo de pnpm directamente aquí
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
@@ -66,7 +66,7 @@ jobs:
         uses: pnpm/action-setup@v4
         with:
           version: 10.13.1
-          cache: 'pnpm' # Habilitar el cacheo de pnpm directamente aquí
+          cache: true # Habilitar el cacheo de pnpm directamente aquí
 
       - name: Install dependencies (if not cached)
         run: pnpm install --frozen-lockfile
@@ -93,7 +93,7 @@ jobs:
         uses: pnpm/action-setup@v4
         with:
           version: 10.13.1
-          cache: 'pnpm' # Habilitar el cacheo de pnpm directamente aquí
+          cache: true # Habilitar el cacheo de pnpm directamente aquí
 
       - name: Install dependencies (if not cached)
         run: pnpm install --frozen-lockfile
@@ -117,7 +117,7 @@ jobs:
         uses: pnpm/action-setup@v4
         with:
           version: 10.13.1
-          cache: 'pnpm' # Habilitar el cacheo de pnpm directamente aquí
+          cache: true # Habilitar el cacheo de pnpm directamente aquí
 
       - name: Install dependencies (if not cached)
         run: pnpm install --frozen-lockfile
@@ -141,7 +141,7 @@ jobs:
         uses: pnpm/action-setup@v4
         with:
           version: 10.13.1
-          cache: 'pnpm' # Habilitar el cacheo de pnpm directamente aquí
+          cache: true # Habilitar el cacheo de pnpm directamente aquí
 
       - name: Install dependencies (if not cached)
         run: pnpm install --frozen-lockfile
