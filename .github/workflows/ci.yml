@@ -30,122 +30,153 @@ jobs:
             URL: ${{ github.event.pull_request.html_url }}
             # Comentario para forzar un cambio y disparar el pipeline
 
-  setup-env:
+  setup-dependencies:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Set up pnpm
-        uses: pnpm/action-setup@v4
-        with:
-          version: 10.13.1
-
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
           node-version: "20"
-          cache: "pnpm"
+
+      - name: Get pnpm store directory
+        id: pnpm-cache-dir
+        run: |
+          echo "pnpm_cache_dir=$(pnpm store path)" >> $GITHUB_OUTPUT
+
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.13.1
+          run_install: false # No ejecutar pnpm install aquí, solo configurar pnpm
+
+      - name: Cache pnpm dependencies
+        uses: actions/cache@v4
+        id: pnpm-cache
+        with:
+          path: ${{ steps.pnpm-cache-dir.outputs.pnpm_cache_dir }}
+          key: ${{ runner.os }}-pnpm-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-
 
       - name: Install dependencies
-        run: pnpm install
-
-      - name: Upload node_modules
-        uses: actions/upload-artifact@v4
-        with:
-          name: node_modules
-          path: node_modules
-          retention-days: 1
+        run: pnpm install --frozen-lockfile
 
   lint-check:
     runs-on: ubuntu-latest
-    needs: setup-env
+    needs: setup-dependencies
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-
-      - name: Download node_modules
-        uses: actions/download-artifact@v4
-        with:
-          name: node_modules
-          path: node_modules
-
-      - name: Set up pnpm
-        uses: pnpm/action-setup@v4
-        with:
-          version: 10.13.1
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
           node-version: "20"
-          cache: "pnpm"
 
-      - name: Add pnpm binaries to PATH
-        run: echo "$(pnpm bin)" >> $GITHUB_PATH
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.13.1
+          run_install: false
+
+      - name: Get pnpm store directory
+        id: pnpm-cache-dir
+        run: |
+          echo "pnpm_cache_dir=$(pnpm store path)" >> $GITHUB_OUTPUT
+
+      - name: Restore pnpm cache
+        uses: actions/cache@v4
+        id: pnpm-cache-restore
+        with:
+          path: ${{ steps.pnpm-cache-dir.outputs.pnpm_cache_dir }}
+          key: ${{ runner.os }}-pnpm-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-
+
+      - name: Install dependencies (if not cached)
+        run: pnpm install --frozen-lockfile
 
       - name: Run linter
-        run: pnpm lint
+        run: pnpm exec eslint .
 
       - name: Check code format with Prettier
-        run: pnpm prettier --check .
+        run: pnpm exec prettier --check .
 
   type-check:
     runs-on: ubuntu-latest
-    needs: setup-env
+    needs: setup-dependencies
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-
-      - name: Download node_modules
-        uses: actions/download-artifact@v4
-        with:
-          name: node_modules
-          path: node_modules
-
-      - name: Set up pnpm
-        uses: pnpm/action-setup@v4
-        with:
-          version: 10.13.1
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
           node-version: "20"
-          cache: "pnpm"
 
-      - name: Add pnpm binaries to PATH
-        run: echo "$(pnpm bin)" >> $GITHUB_PATH
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.13.1
+          run_install: false
+
+      - name: Get pnpm store directory
+        id: pnpm-cache-dir
+        run: |
+          echo "pnpm_cache_dir=$(pnpm store path)" >> $GITHUB_OUTPUT
+
+      - name: Restore pnpm cache
+        uses: actions/cache@v4
+        id: pnpm-cache-restore
+        with:
+          path: ${{ steps.pnpm-cache-dir.outputs.pnpm_cache_dir }}
+          key: ${{ runner.os }}-pnpm-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-
+
+      - name: Install dependencies (if not cached)
+        run: pnpm install --frozen-lockfile
 
       - name: Run TypeScript type check
         run: pnpm --filter backend exec tsc --noEmit && pnpm --filter frontend exec tsc --noEmit
 
   build-projects:
     runs-on: ubuntu-latest
-    needs: setup-env
+    needs: setup-dependencies
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-
-      - name: Download node_modules
-        uses: actions/download-artifact@v4
-        with:
-          name: node_modules
-          path: node_modules
-
-      - name: Set up pnpm
-        uses: pnpm/action-setup@v4
-        with:
-          version: 10.13.1
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
           node-version: "20"
-          cache: "pnpm"
 
-      - name: Add pnpm binaries to PATH
-        run: echo "$(pnpm bin)" >> $GITHUB_PATH
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.13.1
+          run_install: false
+
+      - name: Get pnpm store directory
+        id: pnpm-cache-dir
+        run: |
+          echo "pnpm_cache_dir=$(pnpm store path)" >> $GITHUB_OUTPUT
+
+      - name: Restore pnpm cache
+        uses: actions/cache@v4
+        id: pnpm-cache-restore
+        with:
+          path: ${{ steps.pnpm-cache-dir.outputs.pnpm_cache_dir }}
+          key: ${{ runner.os }}-pnpm-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-
+
+      - name: Install dependencies (if not cached)
+        run: pnpm install --frozen-lockfile
 
       - name: Build projects
         run: pnpm --filter frontend --filter backend build
@@ -157,25 +188,33 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Download node_modules
-        uses: actions/download-artifact@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
         with:
-          name: node_modules
-          path: node_modules
+          node-version: "20"
 
       - name: Set up pnpm
         uses: pnpm/action-setup@v4
         with:
           version: 10.13.1
+          run_install: false
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
+      - name: Get pnpm store directory
+        id: pnpm-cache-dir
+        run: |
+          echo "pnpm_cache_dir=$(pnpm store path)" >> $GITHUB_OUTPUT
+
+      - name: Restore pnpm cache
+        uses: actions/cache@v4
+        id: pnpm-cache-restore
         with:
-          node-version: "20"
-          cache: "pnpm"
+          path: ${{ steps.pnpm-cache-dir.outputs.pnpm_cache_dir }}
+          key: ${{ runner.os }}-pnpm-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-
 
-      - name: Add pnpm binaries to PATH
-        run: echo "$(pnpm bin)" >> $GITHUB_PATH
+      - name: Install dependencies (if not cached)
+        run: pnpm install --frozen-lockfile
 
       - name: Run backend tests
         run: pnpm --filter backend test
