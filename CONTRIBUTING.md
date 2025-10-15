@@ -36,10 +36,24 @@ Este script verifica que todas las herramientas necesarias estén instaladas y c
 
 ### Convención de Commits
 
-```
-feat(T-XXX): descripción corta
-fix(T-XXX): descripción corta
-```
+El proyecto sigue la especificación de [Conventional Commits](https://www.conventionalcommits.org/).
+
+**Formato:** `tipo(scope): descripción`
+
+**Tipos permitidos:**
+
+- `feat`: Una nueva funcionalidad.
+- `fix`: Una corrección de bug.
+- `docs`: Cambios en la documentación.
+- `style`: Cambios que no afectan el significado del código (espacios, formato, etc.).
+- `refactor`: Un cambio de código que no corrige un bug ni añade una funcionalidad.
+- `perf`: Un cambio de código que mejora el rendimiento.
+- `test`: Añadir tests o corregir tests existentes.
+- `build`: Cambios que afectan al sistema de build o dependencias externas.
+- `ci`: Cambios en nuestros archivos y scripts de configuración de CI.
+- `chore`: Otros cambios que no modifican el código fuente o los tests.
+- `revert`: Revierte un commit anterior.
+- `wip`: Trabajo en progreso.
 
 **Scopes permitidos:**
 
@@ -47,8 +61,9 @@ fix(T-XXX): descripción corta
 - `T-BE-SETUP`, `T-BE-SEC`, `T-AUTH-CLERK`
 - `T-BE-GAME`, `T-BE-PAY`, `T-BE-RANK`, `T-BE-SUPPORT`, `T-BE-IA`
 - `T-FE-SETUP-SHADCN`, `T-FE-SETUP-AXIOS`, `T-FE-SETUP-ZUSTAND`
-- `T-FE-02`, `T-FE-03`, `T-FE-05`, `T-FE-06`, `T-FE-07`, `T-FE-08`
+- `T-FE`, `T-FE-02`, `T-FE-03`, `T-FE-05`, `T-FE-06`, `T-FE-07`, `T-FE-08`
 - `T-QA-INT`, `T-RELEASE`, `T-IA`, `T-SEC`, `T-INFRA`
+- `*` (para cambios que afectan a todo el proyecto)
 
 ### Flujo de Trabajo
 
