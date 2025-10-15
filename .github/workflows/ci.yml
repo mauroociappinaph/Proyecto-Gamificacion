@@ -53,7 +53,7 @@ jobs:
     if: always()
     steps:
       - name: Send Telegram notification on failure
-        if: failure() # Solo se ejecuta si el job anterior (build-and-test) falló
+        if: failure()
         uses: appleboy/telegram-action@master
         with:
           to: ${{ secrets.TELEGRAM_CHAT_ID }}
@@ -98,4 +98,3 @@ jobs:
             Rama destino: ${{ github.event.pull_request.base.ref }}
             Autor: ${{ github.event.pull_request.user.login }}
             URL: ${{ github.event.pull_request.html_url }}
-            # Comentario para forzar un cambio y disparar el pipeline
