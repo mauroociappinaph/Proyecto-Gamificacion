@@ -4,7 +4,7 @@ const lintstagedrc = {
     "prettier --write",
   ],
   "*.{json,css,md}": ["prettier --write"],
-  ".github/workflows/*.{yml,yaml}": ["npx actionlint"],
+  ".github/workflows/*.{yml,yaml}": ["bash scripts/run-actionlint.sh"],
 };
 
 export default lintstagedrc;
