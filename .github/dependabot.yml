@@ -1,0 +1,10 @@
+version: 2
+updates:
+  - package-ecosystem: "npm" # Monitorear dependencias de npm (pnpm es compatible)
+    directory: "/" # Escanear desde la raíz del repositorio
+    schedule:
+      interval: "weekly" # Buscar actualizaciones semanalmente
+    open-pull-requests-limit: 10 # Limitar el número de PRs abiertos por Dependabot
+    labels:
+      - "dependencies"
+      - "dependabot"
