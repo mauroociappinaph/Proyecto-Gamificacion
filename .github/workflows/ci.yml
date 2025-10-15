@@ -32,6 +32,9 @@ jobs:
       - name: Install dependencies
         run: pnpm install
 
+      - name: Run TypeScript type check
+        run: pnpm --filter backend exec tsc --noEmit && pnpm --filter frontend exec tsc --noEmit
+
       - name: Run linter
         run: pnpm lint
 
