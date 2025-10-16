@@ -372,11 +372,11 @@ open-aware (v1.0.0) - active (up to date)
 
 **Objetivo:** Construir la API principal, incluyendo autenticación, gestión de datos y lógica de negocio.
 
-- [ ] **T-BE-SETUP-01: Configurar Validación Automática de DTOs.**
-  - [ ] **T-BE-SETUP-01.1:** Instalar `class-validator` y `class-transformer`.
+- [] **T-BE-SETUP-01: Configurar Validación Automática de DTOs.**
+  - [x] **T-BE-SETUP-01.1:** Instalar `class-validator` y `class-transformer`.
     - _MCP-Tool:_ `run_shell_command`
     - _Comando:_ `pnpm --filter backend add class-validator class-transformer`
-  - [ ] **T-BE-SETUP-01.2:** Habilitar el `ValidationPipe` globalmente en `main.ts`.
+  - [x] **T-BE-SETUP-01.2:** Habilitar el `ValidationPipe` globalmente en `main.ts`.
     - _MCP-Tool:_ `replace`
 
   - [ ] **T-BE-SETUP-02: Configurar Conexión a Base de Datos (Mongoose).**
