@@ -65,6 +65,29 @@ El proyecto sigue la especificación de [Conventional Commits](https://www.conve
 - `T-QA-INT`, `T-RELEASE`, `T-IA`, `T-SEC`, `T-INFRA`
 - `*` (para cambios que afectan a todo el proyecto)
 
+### Convención de Issues
+
+**Título de la Issue:**
+
+- **Formato:** `tipo(scope): descripción corta en imperativo`
+- **Ejemplos:**
+  - `feat(auth): agregar login con Google`
+  - `fix(ci): corregir el cache de dependencias`
+  - `docs(readme): actualizar la descripción del proyecto`
+
+**Etiquetas (Labels):**
+
+- **Tipo:** `type:bug`, `type:feature`, `type:enhancement`, `type:docs`
+- **Prioridad:** `priority:high`, `priority:medium`, `priority:low`
+- **Estado:** `status:in-progress`, `status:ready-for-review`, `status:blocked`
+- **Componente:** `component:frontend`, `component:backend`, `component:ci`
+
+**Hitos (Milestones):**
+
+- **Propósito:** Agrupar issues que contribuyen a un objetivo común, como el lanzamiento de una nueva versión o un sprint de desarrollo.
+- **Uso:** Asignar issues a un hito para visualizar el progreso hacia un objetivo específico.
+- **Ejemplo:** `Lanzamiento v.0.1.0`, `Sprint 1`
+
 ### Flujo de Trabajo
 
 1. **Commit por Subtarea**: Al finalizar cada subtarea individual
