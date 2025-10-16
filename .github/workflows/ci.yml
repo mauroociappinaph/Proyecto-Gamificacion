@@ -14,8 +14,6 @@ jobs:
   setup-dependencies:
     name: Setup Dependencies
     runs-on: ubuntu-latest
-    outputs:
-      pnpm-store-path: ${{ steps.get-pnpm-store.outputs.store-path }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -32,19 +30,6 @@ jobs:
           node-version: "20"
           cache: "pnpm"
           cache-dependency-path: "pnpm-lock.yaml"
-
-      - name: Get pnpm store path
-        id: get-pnpm-store
-        run: |
-          echo "store-path=$(pnpm store path --silent)" >> $GITHUB_OUTPUT
-
-      - name: Cache pnpm store
-        uses: actions/cache@v4
-        with:
-          path: ${{ steps.get-pnpm-store.outputs.store-path }}
-          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
-          restore-keys: |
-            ${{ runner.os }}-pnpm-store-
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
