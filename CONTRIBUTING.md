@@ -112,7 +112,7 @@ pnpm test
 
 ## 📚 Documentación
 
-- **Plan Detallado**: `Plan_Ejecucion_Detallado.md`
+- **Plan Detallado**: `docs/plan-ejecutivo-detallado.md`
 - **Arquitectura**: `docs/arquitectura-tecnica.md`
 - **Flujos de Usuario**: `docs/flujos-criticos-usuario.md`
 - **KPIs**: `docs/metricas-exito-kpis.md`
