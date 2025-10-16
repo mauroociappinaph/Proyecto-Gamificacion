@@ -384,10 +384,10 @@ open-aware (v1.0.0) - active (up to date)
 
     **Objetivo:** Establecer la conexión principal entre la aplicación NestJS y la base de datos MongoDB.
 
-  - [ ] **T-BE-SETUP-02.1:** Instalar las dependencias de Mongoose en el backend.
+  - [x] **T-BE-SETUP-02.1:** Instalar las dependencias de Mongoose en el backend.
     - _MCP-Tool:_ `run_shell_command`
     - _Comando:_ `pnpm --filter backend add @nestjs/mongoose mongoose`
-  - [ ] **T-BE-SETUP-02.2:** Configurar el módulo principal del backend para conectarse a la base de datos.
+  - [x] **T-BE-SETUP-02.2:** Configurar el módulo principal del backend para conectarse a la base de datos.
     - _MCP-Tool-Flow:_
       1. `context7.resolve-library-id` con `libraryName: '@nestjs/mongoose'`
       2. `context7.get-library-docs` con el ID obtenido para ver la documentación de `MongooseModule.forRoot`.
