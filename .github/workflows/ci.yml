@@ -11,49 +11,151 @@ on:
       - develop
 
 jobs:
-  build-and-test:
+  pull-request-notification:
     runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    steps:
+      - name: Send Telegram notification on Pull Request
+        uses: appleboy/telegram-action@master
+        with:
+          to: ${{ secrets.TELEGRAM_CHAT_ID }}
+          token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          message: |
+            📢 Nueva Pull Request 📢
+            Repositorio: ${{ github.repository }}
+            Título: ${{ github.event.pull_request.title }}
+            Rama origen: ${{ github.event.pull_request.head.ref }}
+            Rama destino: ${{ github.event.pull_request.base.ref }}
+            Autor: ${{ github.event.pull_request.user.login }}
+            URL: ${{ github.event.pull_request.html_url }}
+            # Comentario para forzar un cambio y disparar el pipeline
 
+  setup-dependencies:
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-
-      - name: Set up pnpm
-        uses: pnpm/action-setup@v4
-        with:
-          version: 10.13.1
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
           node-version: "20"
-          cache: "pnpm"
+
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.13.1
+          cache: true # Habilitar el cacheo de pnpm directamente aquí
 
       - name: Install dependencies
-        run: pnpm install
+        run: pnpm install --frozen-lockfile
+
+  lint-check:
+    runs-on: ubuntu-latest
+    needs: setup-dependencies
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.13.1
+          cache: true # Habilitar el cacheo de pnpm directamente aquí
+
+      - name: Install dependencies (if not cached)
+        run: pnpm install --frozen-lockfile
+
+      - name: Run linter
+        run: pnpm exec eslint .
+
+      - name: Check code format with Prettier
+        run: pnpm exec prettier --check .
+
+  type-check:
+    runs-on: ubuntu-latest
+    needs: setup-dependencies
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.13.1
+          cache: true # Habilitar el cacheo de pnpm directamente aquí
+
+      - name: Install dependencies (if not cached)
+        run: pnpm install --frozen-lockfile
 
       - name: Run TypeScript type check
         run: pnpm --filter backend exec tsc --noEmit && pnpm --filter frontend exec tsc --noEmit
 
-      - name: Run linter
-        run: pnpm lint
+  build-projects:
+    runs-on: ubuntu-latest
+    needs: setup-dependencies
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-      - name: Check code format with Prettier
-        run: pnpm prettier --check .
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
 
-      - name: Run backend tests
-        run: pnpm --filter backend test
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.13.1
+          cache: true # Habilitar el cacheo de pnpm directamente aquí
+
+      - name: Install dependencies (if not cached)
+        run: pnpm install --frozen-lockfile
 
       - name: Build projects
         run: pnpm --filter frontend --filter backend build
 
+  test-backend:
+    runs-on: ubuntu-latest
+    needs: build-projects
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.13.1
+          cache: true # Habilitar el cacheo de pnpm directamente aquí
+
+      - name: Install dependencies (if not cached)
+        run: pnpm install --frozen-lockfile
+
+      - name: Run backend tests
+        run: pnpm --filter backend test
+
   telegram-notification:
     runs-on: ubuntu-latest
-    needs: build-and-test
+    needs: [lint-check, type-check, build-projects, test-backend]
     if: always()
     steps:
       - name: Send Telegram notification on failure
-        if: failure() # Solo se ejecuta si el job anterior (build-and-test) falló
+        if: ${{ needs.lint-check.result == 'failure' || needs.type-check.result == 'failure' || needs.build-projects.result == 'failure' || needs.test-backend.result == 'failure' }}
         uses: appleboy/telegram-action@master
         with:
           to: ${{ secrets.TELEGRAM_CHAT_ID }}
@@ -69,7 +171,7 @@ jobs:
             Estado: Fallido
 
       - name: Send Telegram notification on success
-        if: success()
+        if: ${{ needs.lint-check.result == 'success' && needs.type-check.result == 'success' && needs.build-projects.result == 'success' && needs.test-backend.result == 'success' }}
         uses: appleboy/telegram-action@master
         with:
           to: ${{ secrets.TELEGRAM_CHAT_ID }}
@@ -84,18 +186,6 @@ jobs:
             URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
             Estado: Exitoso
 
-      - name: Send Telegram notification on Pull Request
-        if: github.event_name == 'pull_request'
-        uses: appleboy/telegram-action@master
-        with:
-          to: ${{ secrets.TELEGRAM_CHAT_ID }}
-          token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-          message: |
-            📢 Nueva Pull Request 📢
-            Repositorio: ${{ github.repository }}
-            Título: ${{ github.event.pull_request.title }}
-            Rama origen: ${{ github.event.pull_request.head.ref }}
-            Rama destino: ${{ github.event.pull_request.base.ref }}
-            Autor: ${{ github.event.pull_request.user.login }}
-            URL: ${{ github.event.pull_request.html_url }}
-            # Comentario para forzar un cambio y disparar el pipeline
+      - name: Fail if any previous job failed
+        if: ${{ needs.lint-check.result == 'failure' || needs.type-check.result == 'failure' || needs.build-projects.result == 'failure' || needs.test-backend.result == 'failure' }}
+        run: exit 1

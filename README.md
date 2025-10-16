@@ -34,3 +34,5 @@ Para crear un nuevo archivo de bitácora, podés usar:
 ```bash
 ./scripts/crear-bitacora.sh
 ```
+
+<!-- Test comment for CI workflow -->
