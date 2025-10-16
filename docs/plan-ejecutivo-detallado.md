@@ -700,6 +700,41 @@ open-aware (v1.0.0) - active (up to date)
 
 **Objetivo:** Tareas de optimización, escalabilidad y nuevas funcionalidades complejas que se abordarán después del lanzamiento inicial.
 
+### Mejoras y Nuevas Funcionalidades
+
+- [ ] **T-MVP-01: Módulo de Soporte Técnico.**
+  - [ ] **T-MVP-01.1:** Generar los módulos, servicios y controladores para la gestión de tickets de soporte.
+    - _MCP-Tool:_ `run_shell_command`
+    - _Comando:_ `pnpm --filter backend exec nest g module support && ...`
+  - [ ] **T-MVP-01.2:** Implementar endpoints para la creación, consulta y actualización de tickets de soporte.
+  - [ ] **T-MVP-01.3:** Desarrollar la interfaz de usuario en el frontend para que los usuarios puedan enviar y ver sus tickets de soporte.
+
+- [ ] **T-MVP-02: Módulo de Promoción y Marketing.**
+  - [ ] **T-MVP-02.1:** Generar los módulos, servicios y controladores para la gestión de campañas de promoción.
+    - _MCP-Tool:_ `run_shell_command`
+    - _Comando:_ `pnpm --filter backend exec nest g module marketing && ...`
+  - [ ] **T-MVP-02.2:** Implementar endpoints para la creación y gestión de campañas de marketing.
+  - [ ] **T-MVP-02.3:** Desarrollar la interfaz de usuario en el frontend para que los administradores puedan crear y monitorear campañas.
+
+- [ ] **T-MVP-03: Integración con Pasarela de Pago Adicional (PayPal).**
+  - [ ] **T-MVP-03.1:** Instalar e integrar el SDK de PayPal en el backend.
+    - _MCP-Tool:_ `run_shell_command`
+    - _Comando:_ `pnpm --filter backend add paypal-rest-sdk` (o similar)
+  - [ ] **T-MVP-03.2:** Implementar la lógica en el `PaymentsService` para procesar pagos a través de PayPal.
+  - [ ] **T-MVP-03.3:** Actualizar la interfaz de usuario de pagos en el frontend para incluir PayPal como opción.
+
+- [ ] **T-MVP-04: Integración con Google Analytics.**
+  - [ ] **T-MVP-04.1:** Instalar el SDK de Google Analytics en el frontend.
+    - _MCP-Tool:_ `run_shell_command`
+    * _Comando:_ `pnpm --filter frontend add react-ga` (o similar)
+  - [ ] **T-MVP-04.2:** Crear un hook personalizado `useGoogleAnalytics()` para encapsular la inicialización y el tracking de eventos.
+  - [ ] **T-MVP-04.3:** Integrar el hook en los flujos críticos para enviar eventos relevantes a Google Analytics.
+
+- [ ] **T-MVP-05: Integración Social.**
+  - [ ] **T-MVP-05.1:** Implementar la funcionalidad de compartir logros en redes sociales (ej. Twitter, Facebook).
+  - [ ] **T-MVP-05.2:** Desarrollar la interfaz de usuario en el frontend para permitir a los usuarios compartir sus logros.
+  - [ ] **T-MVP-05.3:** Implementar la opción de inicio de sesión a través de redes sociales (si no está cubierta por Clerk).
+
 ### Optimización del Flujo de Desarrollo
 
 - [ ] **T-QA-03: Integrar Turborepo para optimización de tareas.**

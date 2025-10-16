@@ -1,54 +1,82 @@
-# 0²6
+# Proyecto Gamificación: Plataforma Digital Gamificada y Monetizada (GRAVITAD SYSTEMS S.L.)
 
-Este repositorio contiene el código fuente de 0²6, una aplicación de gamificación diseñada para ofrecer a los usuarios una experiencia interactiva a través de juegos y tareas que les permiten ganar recompensas.
+Este repositorio contiene el código fuente de una plataforma digital gamificada y monetizada, desarrollada por GRAVITAD SYSTEMS S.L. El objetivo principal es ofrecer a los usuarios una experiencia interactiva y divertida a través de juegos y tareas, permitiéndoles generar ingresos mediante la participación y el logro de objetivos.
 
-## Descripción del Proyecto y Objetivos
+## Descripción General y Objetivos del Proyecto
 
-Este proyecto es una aplicación de gamificación que consta de un frontend desarrollado con Next.js y un backend desarrollado con NestJS. La plataforma está construida sobre una arquitectura moderna y escalable, utilizando un monorepo gestionado con `pnpm`.
+La plataforma se construye con un frontend en **Next.js** y un backend en **NestJS**, gestionados en un monorepo con `pnpm`. Se enfoca en una arquitectura moderna y escalable, utilizando **MongoDB** como base de datos y **Clerk** para la autenticación.
 
 ### Objetivos Principales
 
-1.  **Gamificación y Engagement:** Involucrar a los usuarios a través de un sistema de juegos y tareas. Los usuarios pueden completar desafíos para ganar puntos y monedas, que se acumulan en una "wallet" personal. El objetivo es fomentar la participación y la retención a través de la competencia, visible en los "leaderboards".
-2.  **Monetización:** La plataforma integra un sistema de pagos robusto utilizando Stripe, permitiendo a los usuarios cargar fondos en sus wallets y retirarlos.
-3.  **Arquitectura Robusta y Escalable:** El proyecto se basa en una arquitectura de microservicios desacoplada, con comunicación síncrona (API REST) y asíncrona (eventos).
-4.  **Calidad y Automatización:** Fuerte énfasis en la calidad del código con herramientas como ESLint, Prettier, Husky y un pipeline de CI/CD con GitHub Actions.
-5.  **Inteligencia Artificial (Post-MVP):** Diseñado para incorporar módulos de IA en el futuro para análisis de feedback y recomendaciones.
+1.  **Gamificación y Engagement:**
+    - Involucrar a los usuarios mediante un sistema de juegos y tareas desafiantes.
+    - Fomentar la participación y retención a través de recompensas, logros y un sistema de clasificación (leaderboards).
+    - Ofrecer una interfaz intuitiva y visualmente atractiva.
 
-### Flujos Críticos de Usuario
+2.  **Monetización:**
+    - Implementar un sistema de pagos robusto con **Stripe** (y en futuras fases, **PayPal**) para la gestión de wallets, cargas y retiros de fondos.
+    - Incorporar elementos premium, suscripciones y publicidad estratégica.
 
-- **Registro/Login:** Autenticación a través de Clerk.
-- **Completar una Tarea:** Los usuarios seleccionan una tarea, la completan y reciben recompensas.
-- **Gestión de Fondos:** Carga y retiro de fondos de la wallet a través de Stripe.
+3.  **Arquitectura Robusta y Escalable:**
+    - Basada en una arquitectura de microservicios desacoplada, con comunicación síncrona (API REST) y asíncrona (eventos).
+    - Diseñada para ser segura, accesible y de alto rendimiento.
+
+4.  **Calidad y Automatización:**
+    - Fuerte énfasis en la calidad del código con herramientas como **ESLint**, **Prettier**, **Husky** y **Commitlint**.
+    - Pipeline de CI/CD con **GitHub Actions** para linting, type-checking, construcción y pruebas automatizadas.
+    - Escaneo de vulnerabilidades en dependencias con **Dependabot**.
+
+5.  **Inteligencia Artificial y Personalización (Fases Post-MVP):**
+    - Integración de algoritmos de aprendizaje automático para análisis de sentimiento y recomendaciones personalizadas.
+    - Uso de tecnologías de Big Data para optimizar la experiencia del usuario.
+
+### Flujos Críticos de Usuario (MVP)
+
+- **Registro/Login:** Autenticación segura a través de Clerk.
+- **Completar una Tarea/Juego:** Los usuarios seleccionan, participan y completan desafíos para ganar recompensas.
+- **Gestión de Fondos (Wallet):** Carga y retiro de fondos de la wallet a través de pasarelas de pago.
+- **Visualización de Rankings y Logros:** Acceso a tablas de clasificación y seguimiento de progreso.
 
 ## Estructura del Proyecto
 
-- `apps/frontend`: Contiene la aplicación frontend de Next.js.
-- `apps/backend`: Contiene la aplicación backend de NestJS.
-- `packages/common-types`: Tipos y DTOs compartidos entre el frontend y el backend.
-- `packages/config`: Configuraciones compartidas de ESLint.
-- `infra`: Contiene la configuración de Docker.
-- `docs`: Documentación del proyecto.
+El proyecto está organizado en un monorepo para facilitar la gestión de múltiples aplicaciones y paquetes:
 
-## Levantar Servicios con Docker Compose
+- `apps/frontend`: Aplicación frontend desarrollada con Next.js.
+- `apps/backend`: Aplicación backend desarrollada con NestJS.
+- `packages/common-types`: Contiene interfaces y DTOs compartidos entre frontend y backend.
+- `packages/config`: Configuraciones compartidas de ESLint y otras herramientas.
+- `infra`: Archivos de configuración para Docker Compose.
+- `docs`: Documentación detallada del proyecto, incluyendo planes ejecutivos, arquitectura y análisis.
+- `scripts`: Scripts de utilidad para automatización de tareas.
 
-Para levantar los servicios de frontend y backend utilizando Docker Compose, navega a la raíz del proyecto y ejecuta el siguiente comando:
+## Configuración y Ejecución Local con Docker Compose
+
+Para levantar los servicios de frontend y backend utilizando Docker Compose, asegúrate de tener Docker instalado y en ejecución. Luego, navega a la raíz del proyecto (`Proyecto-Gamificacion`) y ejecuta el siguiente comando:
 
 ```bash
 docker-compose -f infra/docker-compose.yml up --build
 ```
 
+Una vez que los servicios estén en funcionamiento:
+
 - El frontend estará disponible en `http://localhost:3000`
 - El backend estará disponible en `http://localhost:3001`
 
-## Configuración y Ejecución
+Para configuraciones y ejecuciones más detalladas, por favor, consulta los `README.md` individuales en las carpetas `apps/frontend` y `apps/backend`.
 
-Para configurar y ejecutar el proyecto, por favor, consulta los `README.md` individuales en las carpetas `apps/frontend` y `apps/backend`.
+## Calidad de Código y CI/CD
 
-## Bitácora diaria de desarrollo
+El proyecto implementa estrictas políticas de calidad de código y un robusto pipeline de integración continua:
 
-En la carpeta `bitacora/` se generan archivos Markdown diarios para la documentation qué hizo cada día, bloqueos y decisiones.
+- **ESLint y Prettier:** Aseguran un estilo de código consistente y formateo automático.
+- **Husky y Lint-Staged:** Ejecutan verificaciones de calidad de código antes de cada commit y push.
+- **Commitlint:** Enforza la convención de mensajes de commit para un historial Git limpio.
+- **GitHub Actions:** Automatiza el linting, type-checking, construcción y pruebas del proyecto en cada push y pull request.
+- **Dependabot:** Monitorea y actualiza automáticamente las dependencias para mitigar vulnerabilidades.
 
-Para crear un nuevo archivo de bitácora, podés usar:
+## Bitácora Diaria de Desarrollo
+
+En la carpeta `bitacora/` se generan archivos Markdown diarios para documentar las actividades realizadas, bloqueos y decisiones. Para crear un nuevo archivo de bitácora, puedes usar:
 
 ```bash
 ./scripts/crear-bitacora.sh
