@@ -82,6 +82,9 @@ El proyecto sigue la especificación de [Conventional Commits](https://www.conve
 - **Estado:** `status:in-progress`, `status:ready-for-review`, `status:blocked`
 - **Componente:** `component:frontend`, `component:backend`, `component:ci`
 
+- **Estandarización de Etiquetas:** Las etiquetas deben seguir la nueva convención de prefijos `layer:` o `type:` para mejorar la consistencia y claridad.
+  - **Ejemplo:** `layer:frontend`, `layer:infra`, `layer:logging`, `layer:monetization`, `layer:quality`, `layer:security`, `type:setup`.
+
 **Hitos (Milestones):**
 
 - **Propósito:** Agrupar issues que contribuyen a un objetivo común, como el lanzamiento de una nueva versión o un sprint de desarrollo.
