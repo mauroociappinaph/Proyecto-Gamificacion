@@ -17,37 +17,39 @@ import { AppService } from './app.service';
       }),
       inject: [ConfigService],
     }),
-    LoggerModule.forRoot({
-      pinoHttp: {
-        level: process.env.LOG_LEVEL || 'debug',
-        redact: ['request.headers.authorization'],
-        serializers: {
-          req: (req) => ({
-            id: req.id,
-            method: req.method,
-            url: req.url,
-            userId: req.userId,
-            userRole: req.userRole,
-          }),
+    LoggerModule.forRootAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: async (configService: ConfigService) => ({
+        pinoHttp: {
+          level: configService.get<string>('LOG_LEVEL') || 'debug',
+          redact: ['request.headers.authorization'],
+          serializers: {
+            req: (req) => ({
+              id: req.id,
+              method: req.method,
+              url: req.url,
+              userId: req.userId, // Mantener para el interceptor
+              userRole: req.userRole, // Mantener para el interceptor
+            }),
+          },
+          transport:
+            process.env.NODE_ENV !== 'production'
+              ? {
+                  target: 'pino-pretty',
+                  options: {
+                    colorize: true,
+                    singleLine: true,
+                    levelFirst: false,
+                    translateTime: "UTC:yyyy-mm-dd'T'HH:MM:ss.l'Z'",
+                    messageKey: 'msg',
+                    errorLikeObjectKeys: ['err', 'error'],
+                    ignore: 'pid,hostname,context,req.id,req.stream,res.stream',
+                  },
+                }
+              : undefined,
         },
-        transport:
-          process.env.NODE_ENV !== 'production'
-            ? {
-                target: 'pino-pretty',
-                options: {
-                  colorize: true,
-                  singleLine: true,
-                  levelFirst: false,
-                  translateTime: "yyyy-MM-dd'T'HH:mm:ss.l'Z'",
-                  messageFormat:
-                    '{time} User:{req.userId} ({req.userRole}) | {req.method} {req.url} | {msg}',
-                  ignore:
-                    'pid,hostname,context,req,res,responseTime,req.userId,req.userRole',
-                  errorLikeObjectKeys: ['err', 'error'],
-                },
-              }
-            : undefined,
-      },
+      }),
     }),
   ],
   controllers: [AppController],

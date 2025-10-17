@@ -8,7 +8,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "prepare": "husky install",
     "lint": "eslint .",
-    "format": "prettier --write ."
+    "format": "prettier --write .",
+    "logs:backend": "docker-compose -f infra/docker-compose.yml logs -f backend | ./apps/backend/node_modules/.bin/pino-pretty"
   },
   "keywords": [],
   "author": "",

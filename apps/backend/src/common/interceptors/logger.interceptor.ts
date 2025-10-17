@@ -13,14 +13,12 @@ export class LoggerInterceptor implements NestInterceptor {
 
     // TODO: Obtener la información real del usuario autenticado (ID, rol)
     // Esto se implementará cuando se integre Clerk.
-    // TODO: Obtener la información real del usuario autenticado (ID, rol)
-    // Esto se implementará cuando se integre Clerk.
     const userId = 'guest'; // Placeholder
     const userRole = 'anonymous'; // Placeholder
 
     // Añadir la información del usuario al request para que pino-pretty pueda acceder a ella
-    request['userId'] = userId;
-    request['userRole'] = userRole;
+    request.userId = userId;
+    request.userRole = userRole;
 
     return next.handle();
   }
