@@ -49,6 +49,30 @@ El proyecto está organizado en un monorepo para facilitar la gestión de múlti
 - `docs`: Documentación detallada del proyecto, incluyendo planes ejecutivos, arquitectura y análisis.
 - `scripts`: Scripts de utilidad para automatización de tareas.
 
+## Scripts Disponibles
+
+A continuación se listan los scripts más importantes del proyecto.
+
+### Raíz del Proyecto
+
+- `pnpm check-env`: Verifica que todas las herramientas y versiones necesarias estén instaladas en el entorno local. **Es obligatorio ejecutarlo antes de empezar a desarrollar.**
+- `pnpm lint`: Ejecuta el linter de ESLint en todo el proyecto.
+- `pnpm format`: Formatea todo el código del proyecto con Prettier.
+- `pnpm logs:backend`: Muestra los logs del contenedor del backend en un formato visual y con colores (requiere que los contenedores de Docker estén corriendo).
+
+### Backend (`apps/backend`)
+
+- `pnpm --filter backend build`: Compila la aplicación de NestJS para producción.
+- `pnpm --filter backend start:dev`: Inicia el servidor de desarrollo del backend en modo "watch".
+- `pnpm --filter backend start:prod`: Inicia el servidor del backend en modo producción (requiere compilación previa).
+- `pnpm --filter backend test`: Ejecuta las pruebas unitarias del backend.
+
+### Frontend (`apps/frontend`)
+
+- `pnpm --filter frontend dev`: Inicia el servidor de desarrollo de Next.js.
+- `pnpm --filter frontend build`: Compila la aplicación de Next.js para producción.
+- `pnpm --filter frontend start`: Inicia el servidor de Next.js en modo producción.
+
 ## Configuración y Ejecución Local con Docker Compose
 
 Para levantar los servicios de frontend y backend utilizando Docker Compose, asegúrate de tener Docker instalado y en ejecución. Luego, navega a la raíz del proyecto (`Proyecto-Gamificacion`) y ejecuta el siguiente comando:
