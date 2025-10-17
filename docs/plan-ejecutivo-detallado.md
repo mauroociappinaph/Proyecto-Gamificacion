@@ -436,20 +436,6 @@ open-aware (v1.0.0) - active (up to date)
       ```
   - [ ] **T-BE-SETUP-04.3:** Verificar que los endpoints protegidos requieren token Bearer y que Swagger permite probarlos correctamente.
 
-- [ ] **T-BE-SEC-01: Implementar Guards de Seguridad para Webhooks.**
-
-  **Objetivo:** Asegurar que todos los webhooks entrantes (Clerk, Stripe) son verificados y legítimos.
-  - _Sugerencia de Herramienta (Investigación):_ Utilizar `open-aware` para buscar ejemplos de `Guards` de seguridad robustos para webhooks de Clerk y Stripe en otros proyectos NestJS.
-
-  - [ ] **T-BE-SEC-01.1:** Crear un `StripeWebhookGuard` que verifique la firma `Stripe-Signature`.
-    - _MCP-Tool-Flow:_
-      1. `stripe.search_stripe_documentation` con `question: 'how to verify webhook signatures in nestjs'`.
-      2. `write_file` para crear el archivo del guard.
-  - [ ] **T-BE-SEC-01.2:** Crear un `ClerkWebhookGuard` que verifique las firmas de Clerk.
-    - _MCP-Tool-Flow:_
-      1. `context7.get-library-docs` para `@clerk/clerk-sdk-node` sobre webhooks.
-      2. `write_file` para crear el archivo del guard.
-
 - [ ] **T-AUTH-CLERK-01 (R-001, R-002): Integrar Clerk para Gestión de Usuarios y Autenticación.**
   - [ ] **T-AUTH-CLERK-01.3:** Integración en el Backend (NestJS), creando el `AuthService` y un `ClerkAuthGuard`.
     - _MCP-Tool-Flow:_
@@ -490,6 +476,21 @@ open-aware (v1.0.0) - active (up to date)
     - _MCP-Tool-Flow:_
       1. `testsprite_generate_backend_test_plan` enfocado en el módulo de pagos.
       2. `testsprite_generate_code_and_execute`.
+
+- [ ] **T-BE-SEC-01: Implementar Guards de Seguridad para Webhooks.**
+
+  **Objetivo:** Asegurar que todos los webhooks entrantes (Clerk, Stripe) son verificados y legítimos.
+  _Nota: Esta tarea depende de la configuración previa de Clerk (`T-AUTH-CLERK-01`) y Stripe (`T-BE-PAY-01`)._
+  - _Sugerencia de Herramienta (Investigación):_ Utilizar `open-aware` para buscar ejemplos de `Guards` de seguridad robustos para webhooks de Clerk y Stripe en otros proyectos NestJS.
+
+  - [ ] **T-BE-SEC-01.1:** Crear un `StripeWebhookGuard` que verifique la firma `Stripe-Signature`.
+    - _MCP-Tool-Flow:_
+      1. `stripe.search_stripe_documentation` con `question: 'how to verify webhook signatures in nestjs'`.
+      2. `write_file` para crear el archivo del guard.
+  - [ ] **T-BE-SEC-01.2:** Crear un `ClerkWebhookGuard` que verifique las firmas de Clerk.
+    - _MCP-Tool-Flow:_
+      1. `context7.get-library-docs` para `@clerk/clerk-sdk-node` sobre webhooks`.
+      2. `write_file` para crear el archivo del guard.
 
 - [ ] **T-BE-RANK-01 (R-006): Módulo de Clasificaciones (Leaderboards).**
   - _Sugerencia de Herramienta:_ Utilizar la extensión `mongodb` de Gemini CLI para consultar los datos en Redis (si la extensión lo soporta) o en la base de datos de respaldo.
