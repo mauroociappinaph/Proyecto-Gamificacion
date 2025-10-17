@@ -437,10 +437,24 @@ open-aware (v1.0.0) - active (up to date)
   - [ ] **T-BE-SETUP-04.3:** Verificar que los endpoints protegidos requieren token Bearer y que Swagger permite probarlos correctamente.
 
 - [ ] **T-AUTH-CLERK-01 (R-001, R-002): Integrar Clerk para Gestión de Usuarios y Autenticación.**
-  - [ ] **T-AUTH-CLERK-01.3:** Integración en el Backend (NestJS), creando el `AuthService` y un `ClerkAuthGuard`.
+  - [ ] **T-AUTH-CLERK-01.1: Configuración Inicial de Clerk (Manual).**
+    - _Acción:_ Crear una cuenta en Clerk.com, configurar una nueva aplicación, obtener las claves API (PUBLIC_KEY y SECRET_KEY).
+    - _Objetivo:_ Preparar el entorno de Clerk para la integración.
+  - [ ] **T-AUTH-CLERK-01.2: Configurar Variables de Entorno para Clerk.**
+    - _Acción:_ Añadir las claves API de Clerk (`CLERK_SECRET_KEY`, `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY`) a los archivos `.env.example` del backend y frontend.
+    - _Objetivo:_ Hacer que las credenciales de Clerk estén disponibles para las aplicaciones.
+  - [ ] **T-AUTH-CLERK-01.3: Integración en el Backend (NestJS).**
+    - _Acción:_ Instalar el SDK de Clerk para Node.js (`@clerk/clerk-sdk-node`).
+    - _Acción:_ Crear un `AuthService` para manejar la verificación de tokens JWT de Clerk.
+    - _Acción:_ Crear un `ClerkAuthGuard` para proteger los endpoints del backend.
     - _MCP-Tool-Flow:_
       1. `context7.get-library-docs` para `@clerk/clerk-sdk-node`.
       2. `write_file` para crear `auth.service.ts` y `clerk.guard.ts`.
+
+  - [ ] **T-AUTH-CLERK-01.5: Sincronización de Usuarios (Webhook).**
+    - _Acción:_ Configurar un webhook en Clerk para notificar al backend sobre eventos de usuario (creación, actualización, eliminación).
+    - _Acción:_ Implementar un endpoint en el backend (`/webhooks/clerk`) para recibir y procesar estos eventos, sincronizando los usuarios con la base de datos local.
+    - _Objetivo:_ Mantener la base de datos local sincronizada con los usuarios de Clerk.
 
 - [ ] **T-BE-GAME-01 (R-003, R-004): Módulos de Juegos, Tareas y Recompensas.**
   - _Sugerencia de Herramienta:_ Utilizar la extensión `mongodb` de Gemini CLI para verificar la creación de juegos, tareas y recompensas en la base de datos.
@@ -519,6 +533,12 @@ open-aware (v1.0.0) - active (up to date)
 
 **Objetivo:** Construir las interfaces de usuario para las funcionalidades clave del backend.
 **Nota:** Todos los tipos para las respuestas de la API y DTOs deben importarse desde el paquete `packages/common-types`.
+
+- [ ] **T-FE-AUTH-CLERK-01: Integración en el Frontend (Next.js).**
+  - _Acción:_ Instalar el SDK de Clerk para React (`@clerk/nextjs`).
+  - _Acción:_ Envolver la aplicación Next.js con el `ClerkProvider`.
+  - _Acción:_ Implementar componentes de UI de Clerk (SignIn, SignUp, UserButton).
+  - _Objetivo:_ Habilitar la autenticación en el frontend.
 
 - [ ] **T-FE-SETUP-SHADCN-01: Configurar e inicializar Shadcn/UI.**
   - [ ] **T-FE-SETUP-SHADCN-01.0:** Crear rama `feature/T-FE-SETUP-SHADCN-01-init`.

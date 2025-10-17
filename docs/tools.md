@@ -722,6 +722,504 @@ Tools:
 
 🔴 mongodb (from mongodb) - Disconnected
 
+🟢 redis (from mcp-redis) - Ready (44 tools)
+Tools:
+
+- client_list
+  Get a list of connected clients to the Redis server.
+- create_vector_index_hash
+  Create a Redis 8 vector similarity index using HNSW on a
+  Redis hash.
+
+  This function sets up a Redis index for approximate
+  nearest neighbor (ANN)
+  search using the HNSW algorithm and float32 vector
+  embeddings.
+
+  Args:
+  index_name: The name of the Redis index to create.
+  Unless specifically required, use the default name for
+  the index.
+  prefix: The key prefix used to identify documents to
+  index (e.g., 'doc:'). Unless specifically required, use
+  the default prefix.
+  vector_field: The name of the vector field to be
+  indexed for similarity search. Unless specifically
+  required, use the default field name
+  dim: The dimensionality of the vectors stored under
+  the vector_field.
+  distance_metric: The distance function to use (e.g.,
+  'COSINE', 'L2', 'IP').
+
+  Returns:
+  A string indicating whether the index was created
+  successfully or an error message.
+
+- dbsize
+  Get the number of keys stored in the Redis database
+- delete
+  Delete a Redis key.
+
+  Args:
+  key (str): The key to delete.
+
+  Returns:
+  str: Confirmation message or an error message.
+
+- expire
+  Set an expiration time for a Redis key.
+
+  Args:
+  name: The Redis key.
+  expire_seconds: Time in seconds after which the key
+  should expire.
+
+  Returns:
+  A success message or an error message.
+
+- get
+  Get a Redis string value.
+
+  Args:
+  key (str): The key to retrieve.
+
+  Returns:
+  str, bytes: The stored value or an error message.
+
+- get_index_info
+  Retrieve schema and information about a specific Redis
+  index using FT.INFO.
+
+  Args:
+  index_name (str): The name of the index to retrieve
+  information about.
+
+  Returns:
+  str: Information about the specified index or an
+  error message.
+
+- get_indexed_keys_number
+  Retrieve the number of indexed keys by the index
+
+  Args:
+  index_name (str): The name of the index to retrieve
+  information about.
+
+  Returns:
+  str: Number of indexed keys as a string
+
+- get_indexes
+  List of indexes in the Redis database
+
+  Returns:
+  str: A JSON string containing the list of indexes or
+  an error message.
+
+- get_vector_from_hash
+  Retrieve a vector from a Redis hash and convert it back
+  from binary blob.
+
+  Args:
+  name: The Redis hash key.
+  vector_field: The field name inside the hash. Unless
+  specifically required, use the default field name
+
+  Returns:
+  The vector as a list of floats, or an error message
+  if retrieval fails.
+
+- hdel
+  Delete a field from a Redis hash.
+
+  Args:
+  name: The Redis hash key.
+  key: The field name inside the hash.
+
+  Returns:
+  A success message or an error message.
+
+- hexists
+  Check if a field exists in a Redis hash.
+
+  Args:
+  name: The Redis hash key.
+  key: The field name inside the hash.
+
+  Returns:
+  True if the field exists, False otherwise.
+
+- hget
+  Get the value of a field in a Redis hash.
+
+  Args:
+  name: The Redis hash key.
+  key: The field name inside the hash.
+
+  Returns:
+  The field value or an error message.
+
+- hgetall
+  Get all fields and values from a Redis hash.
+
+  Args:
+  name: The Redis hash key.
+
+  Returns:
+  A dictionary of field-value pairs or an error
+  message.
+
+- hset
+  Set a field in a hash stored at key with an optional
+  expiration time.
+
+  Args:
+  name: The Redis hash key.
+  key: The field name inside the hash.
+  value: The value to set.
+  expire_seconds: Optional; time in seconds after which
+  the key should expire.
+
+  Returns:
+  A success message or an error message.
+
+- info
+  Get Redis server information and statistics.
+
+  Args:
+  section: The section of the info command (default,
+  memory, cpu, etc.).
+
+  Returns:
+  A dictionary of server information or an error
+  message.
+
+- json_del
+  Delete a JSON value from Redis at a given path.
+
+  Args:
+  name: The Redis key where the JSON document is
+  stored.
+  path: The JSON path to delete (default: root '$').
+
+  Returns:
+  A success message or an error message.
+
+- json_get
+  Retrieve a JSON value from Redis at a given path.
+
+  Args:
+  name: The Redis key where the JSON document is
+  stored.
+  path: The JSON path to retrieve (default: root '$').
+
+  Returns:
+  The retrieved JSON value or an error message.
+
+- json_set
+  Set a JSON value in Redis at a given path with an
+  optional expiration time.
+
+  Args:
+  name: The Redis key where the JSON document is
+  stored.
+  path: The JSON path where the value should be set.
+  value: The JSON value to store.
+  expire_seconds: Optional; time in seconds after which
+  the key should expire.
+
+  Returns:
+  A success message or an error message.
+
+- llen
+  Get the length of a Redis list.
+- lpop
+  Remove and return the first element from a Redis list.
+- lpush
+  Push a value onto the left of a Redis list and optionally
+  set an expiration time.
+- lrange
+  Get elements from a Redis list within a specific range.
+
+  Returns:
+  str: A JSON string containing the list of elements or an
+  error message.
+
+- publish
+  Publish a message to a Redis channel.
+
+  Args:
+  channel: The Redis channel to publish to.
+  message: The message to send.
+
+  Returns:
+  A success message or an error message.
+
+- rename
+  Renames a Redis key from old_key to new_key.
+
+  Args:
+  old_key (str): The current name of the Redis key to
+  rename.
+  new_key (str): The new name to assign to the key.
+
+  Returns:
+  Dict[str, Any]: A dictionary containing the result of
+  the operation.
+  On success: {"status": "success", "message":
+  "..."}
+  On error: {"error": "..."}
+
+- rpop
+  Remove and return the last element from a Redis list.
+- rpush
+  Push a value onto the right of a Redis list and
+  optionally set an expiration time.
+- sadd
+  Add a value to a Redis set with an optional expiration
+  time.
+
+  Args:
+  name: The Redis set key.
+  value: The value to add to the set.
+  expire_seconds: Optional; time in seconds after which
+  the set should expire.
+
+  Returns:
+  A success message or an error message.
+
+- scan_all_keys
+  Scan and return ALL keys matching a pattern using
+  multiple SCAN iterations.
+
+  This function automatically handles the SCAN cursor
+  iteration to collect all matching keys.
+  It's safer than KEYS \* for large databases but will still
+  collect all results in memory.
+
+  ⚠️ WARNING: With very large datasets (millions of keys),
+  this may consume significant memory.
+  For large-scale operations, consider using scan_keys()
+  with manual iteration instead.
+
+  Args:
+  pattern: Pattern to match keys against (default is
+  "\*" for all keys).
+  batch_size: Number of keys to scan per iteration
+  (default 100).
+
+  Returns:
+  A list of all keys matching the pattern or an error
+  message.
+
+- scan_keys
+  Scan keys in the Redis database using the SCAN command
+  (non-blocking, production-safe).
+
+  ⚠️ IMPORTANT: This returns PARTIAL results from one
+  iteration. Use scan_all_keys()
+  to get ALL matching keys, or call this function multiple
+  times with the returned cursor
+  until cursor becomes 0.
+
+  The SCAN command iterates through the keyspace in small
+  chunks, making it safe to use
+  on large databases without blocking other operations.
+
+  Args:
+  pattern: Pattern to match keys against (default is
+  "_" for all keys).
+  Common patterns: "user:_", "cache:_",
+  "_:123", etc.
+  count: Hint for the number of keys to return per
+  iteration (default 100).
+  Redis may return more or fewer keys than this
+  hint.
+  cursor: The cursor position to start scanning from (0
+  to start from beginning).
+  To continue scanning, use the cursor value
+  returned from previous call.
+
+  Returns:
+  A dictionary containing: - 'cursor': Next cursor position (0 means scan is
+  complete) - 'keys': List of keys found in this iteration
+  (PARTIAL RESULTS) - 'total_scanned': Number of keys returned in this
+  batch - 'scan_complete': Boolean indicating if scan is
+  finished
+  Or an error message if something goes wrong.
+
+  Example usage:
+  First call: scan*keys("user:*") -> returns
+  cursor=1234, keys=[...], scan*complete=False
+  Next call: scan_keys("user:*", cursor=1234) ->
+  continues from where it left off
+  Final call: returns cursor=0, scan_complete=True when
+  done
+
+- set
+  Set a Redis string value with an optional expiration
+  time.
+
+  Args:
+  key (str): The key to set.
+  value (str, bytes, int, float, dict): The value to
+  store.
+  expiration (int, optional): Expiration time in
+  seconds.
+
+  Returns:
+  str: Confirmation message or an error message.
+
+- set_vector_in_hash
+  Store a vector as a field in a Redis hash.
+
+  Args:
+  name: The Redis hash key.
+  vector_field: The field name inside the hash. Unless
+  specifically required, use the default field name
+  vector: The vector (list of numbers) to store in the
+  hash.
+
+  Returns:
+  True if the vector was successfully stored, False
+  otherwise.
+
+- smembers
+  Get all members of a Redis set.
+
+  Args:
+  name: The Redis set key.
+
+  Returns:
+  A list of values in the set or an error message.
+
+- srem
+  Remove a value from a Redis set.
+
+  Args:
+  name: The Redis set key.
+  value: The value to remove from the set.
+
+  Returns:
+  A success message or an error message.
+
+- subscribe
+  Subscribe to a Redis channel.
+
+  Args:
+  channel: The Redis channel to subscribe to.
+
+  Returns:
+  A success message or an error message.
+
+- type
+  Returns the string representation of the type of the
+  value stored at key
+
+  Args:
+  key (str): The key to check.
+
+  Returns:
+  str: The type of key, or none when key doesn't exist
+
+- unsubscribe
+  Unsubscribe from a Redis channel.
+
+  Args:
+  channel: The Redis channel to unsubscribe from.
+
+  Returns:
+  A success message or an error message.
+
+- vector_search_hash
+  Perform a KNN vector similarity search using Redis 8 or
+  later version on vectors stored in hash data structures.
+
+  Args:
+  query_vector: List of floats to use as the query
+  vector.
+  index_name: Name of the Redis index. Unless
+  specifically specified, use the default index name.
+  vector_field: Name of the indexed vector field.
+  Unless specifically required, use the default field name
+  k: Number of nearest neighbors to return.
+  return_fields: List of fields to return (optional).
+
+  Returns:
+  A list of matched documents or an error message.
+
+- xadd
+  Add an entry to a Redis stream with an optional
+  expiration time.
+
+  Args:
+  key (str): The stream key.
+  fields (dict): The fields and values for the stream
+  entry.
+  expiration (int, optional): Expiration time in
+  seconds.
+
+  Returns:
+  str: The ID of the added entry or an error message.
+
+- xdel
+  Delete an entry from a Redis stream.
+
+  Args:
+  key (str): The stream key.
+  entry_id (str): The ID of the entry to delete.
+
+  Returns:
+  str: Confirmation message or an error message.
+
+- xrange
+  Read entries from a Redis stream.
+
+  Args:
+  key (str): The stream key.
+  count (int, optional): Number of entries to retrieve.
+
+  Returns:
+  str: The retrieved stream entries or an error
+  message.
+
+- zadd
+  Add a member to a Redis sorted set with an optional
+  expiration time.
+
+  Args:
+  key (str): The sorted set key.
+  score (float): The score of the member.
+  member (str): The member to add.
+  expiration (int, optional): Expiration time in
+  seconds.
+
+  Returns:
+  str: Confirmation message or an error message.
+
+- zrange
+  Retrieve a range of members from a Redis sorted set.
+
+  Args:
+  key (str): The sorted set key.
+  start (int): The starting index.
+  end (int): The ending index.
+  with_scores (bool, optional): Whether to include
+  scores in the result.
+
+  Returns:
+  str: The sorted set members in the given range or an
+  error message.
+
+- zrem
+  Remove a member from a Redis sorted set.
+
+  Args:
+  key (str): The sorted set key.
+  member (str): The member to remove.
+
+  Returns:
+  str: Confirmation message or an error message.
+
 🟢 postman (from postman) - Ready (38 tools)
 Tools:
 
