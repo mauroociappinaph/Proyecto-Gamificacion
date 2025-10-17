@@ -403,7 +403,7 @@ open-aware (v1.0.0) - active (up to date)
     - _MCP-Tool-Flow:_
       1. `context7.get-library-docs` para `nestjs-pino`.
 
-- [ ] **T-BE-SETUP-03.3:** Definir y aplicar convenciones de formato de logs.
+- [x] **T-BE-SETUP-03.3:** Definir y aplicar convenciones de formato de logs.
   - _Acción:_ Implementar un interceptor de NestJS para añadir información del usuario autenticado (ID, rol) al contexto del log.
   - _Acción:_ Configurar `pino-pretty` para usar un `messageFormat` personalizado que incluya timestamp, información del usuario, método y ruta HTTP, y el mensaje del log (ej. `2025-10-16T21:45:07.123Z User:Mauro (admin) | GET /tasks | ✅ Task list fetched`).
   - _Objetivo:_ Mejorar la trazabilidad y observabilidad de los eventos de la aplicación.
