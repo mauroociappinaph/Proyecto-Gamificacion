@@ -408,6 +408,10 @@ open-aware (v1.0.0) - active (up to date)
   - _Acción:_ Configurar `pino-pretty` para usar un `messageFormat` personalizado que incluya timestamp, información del usuario, método y ruta HTTP, y el mensaje del log (ej. `2025-10-16T21:45:07.123Z User:Mauro (admin) | GET /tasks | ✅ Task list fetched`).
   - _Objetivo:_ Mejorar la trazabilidad y observabilidad de los eventos de la aplicación.
 
+- [ ] **T-BE-SETUP-03.4:** Integrar datos de usuario de Clerk en los logs.
+  - _Acción:_ Modificar `logger.interceptor.ts` para obtener el ID y rol del usuario autenticado desde el contexto de la petición (inyectado por el guard de Clerk) y reemplazar los valores placeholder.
+  - _Objetivo:_ Enriquecer los logs con información real del usuario para una mejor trazabilidad.
+
 - [ ] **T-BE-SETUP-04: Configurar Documentación de API con Swagger (OpenAPI).**
 
   **Objetivo:** Generar automáticamente la documentación interactiva de la API (Swagger UI).
