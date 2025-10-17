@@ -415,10 +415,10 @@ open-aware (v1.0.0) - active (up to date)
 - [ ] **T-BE-SETUP-04: Configurar Documentación de API con Swagger (OpenAPI)**
 
   **Objetivo:** Generar automáticamente la documentación interactiva de la API y habilitar autenticación con Bearer Token para probar endpoints protegidos.
-  - [ ] **T-BE-SETUP-04.1:** Instalar dependencias de Swagger.
+  - [x] **T-BE-SETUP-04.1:** Instalar dependencias de Swagger.
     - _MCP-Tool:_ `run_shell_command`
     - _Comando:_ `pnpm --filter backend add @nestjs/swagger swagger-ui-express`
-  - [ ] **T-BE-SETUP-04.2:** Configurar Swagger en `main.ts`.
+  - [x] **T-BE-SETUP-04.2:** Configurar Swagger en `main.ts`.
     - _Acción:_
       - Crear la configuración de Swagger usando `DocumentBuilder`.
       - **Agregar autenticación Bearer Token** con `.addBearerAuth()`.
