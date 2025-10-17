@@ -403,7 +403,7 @@ open-aware (v1.0.0) - active (up to date)
     - _MCP-Tool-Flow:_
       1. `context7.get-library-docs` para `nestjs-pino`.
 
-- [ ] **T-BE-SETUP-03.3:** Definir y aplicar convenciones de formato de logs.
+- [x] **T-BE-SETUP-03.3:** Definir y aplicar convenciones de formato de logs.
   - _Acción:_ Implementar un interceptor de NestJS para añadir información del usuario autenticado (ID, rol) al contexto del log.
   - _Acción:_ Configurar `pino-pretty` para usar un `messageFormat` personalizado que incluya timestamp, información del usuario, método y ruta HTTP, y el mensaje del log (ej. `2025-10-16T21:45:07.123Z User:Mauro (admin) | GET /tasks | ✅ Task list fetched`).
   - _Objetivo:_ Mejorar la trazabilidad y observabilidad de los eventos de la aplicación.
@@ -412,14 +412,29 @@ open-aware (v1.0.0) - active (up to date)
   - _Acción:_ Modificar `logger.interceptor.ts` para obtener el ID y rol del usuario autenticado desde el contexto de la petición (inyectado por el guard de Clerk) y reemplazar los valores placeholder.
   - _Objetivo:_ Enriquecer los logs con información real del usuario para una mejor trazabilidad.
 
-- [ ] **T-BE-SETUP-04: Configurar Documentación de API con Swagger (OpenAPI).**
+- [ ] **T-BE-SETUP-04: Configurar Documentación de API con Swagger (OpenAPI)**
 
-  **Objetivo:** Generar automáticamente la documentación interactiva de la API (Swagger UI).
-  - [ ] **T-BE-SETUP-04.1:** Instalar las dependencias de Swagger.
+  **Objetivo:** Generar automáticamente la documentación interactiva de la API y habilitar autenticación con Bearer Token para probar endpoints protegidos.
+  - [ ] **T-BE-SETUP-04.1:** Instalar dependencias de Swagger.
     - _MCP-Tool:_ `run_shell_command`
     - _Comando:_ `pnpm --filter backend add @nestjs/swagger swagger-ui-express`
   - [ ] **T-BE-SETUP-04.2:** Configurar Swagger en `main.ts`.
-    - _MCP-Tool:_ `replace`
+    - _Acción:_
+      - Crear la configuración de Swagger usando `DocumentBuilder`.
+      - **Agregar autenticación Bearer Token** con `.addBearerAuth()`.
+      - Registrar Swagger en la ruta `/api-docs`.
+    - _Ejemplo:_
+      ```ts
+      const config = new DocumentBuilder()
+        .setTitle("0²6 API")
+        .setDescription("API para la plataforma de gamificación y monetización")
+        .setVersion("1.0")
+        .addBearerAuth() // Autenticación para endpoints protegidos
+        .build();
+      const document = SwaggerModule.createDocument(app, config);
+      SwaggerModule.setup("api-docs", app, document);
+      ```
+  - [ ] **T-BE-SETUP-04.3:** Verificar que los endpoints protegidos requieren token Bearer y que Swagger permite probarlos correctamente.
 
 - [ ] **T-BE-SEC-01: Implementar Guards de Seguridad para Webhooks.**
 
