@@ -21,6 +21,15 @@ import { AppService } from './app.service';
       pinoHttp: {
         level: process.env.LOG_LEVEL || 'debug',
         redact: ['request.headers.authorization'],
+        serializers: {
+          req: (req) => ({
+            id: req.id,
+            method: req.method,
+            url: req.url,
+            userId: req.userId,
+            userRole: req.userRole,
+          }),
+        },
         transport:
           process.env.NODE_ENV !== 'production'
             ? {
@@ -31,8 +40,9 @@ import { AppService } from './app.service';
                   levelFirst: false,
                   translateTime: "yyyy-MM-dd'T'HH:mm:ss.l'Z'",
                   messageFormat:
-                    '{req.headers.x-correlation-id} [{context}] {msg}',
-                  ignore: 'pid,hostname,context,req,res,responseTime',
+                    '{time} User:{req.userId} ({req.userRole}) | {req.method} {req.url} | {msg}',
+                  ignore:
+                    'pid,hostname,context,req,res,responseTime,req.userId,req.userRole',
                   errorLikeObjectKeys: ['err', 'error'],
                 },
               }
