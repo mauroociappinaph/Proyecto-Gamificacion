@@ -384,10 +384,10 @@ open-aware (v1.0.0) - active (up to date)
 
     **Objetivo:** Establecer la conexión principal entre la aplicación NestJS y la base de datos MongoDB.
 
-  - [ ] **T-BE-SETUP-02.1:** Instalar las dependencias de Mongoose en el backend.
+  - [x] **T-BE-SETUP-02.1:** Instalar las dependencias de Mongoose en el backend.
     - _MCP-Tool:_ `run_shell_command`
     - _Comando:_ `pnpm --filter backend add @nestjs/mongoose mongoose`
-  - [ ] **T-BE-SETUP-02.2:** Configurar el módulo principal del backend para conectarse a la base de datos.
+  - [x] **T-BE-SETUP-02.2:** Configurar el módulo principal del backend para conectarse a la base de datos.
     - _MCP-Tool-Flow:_
       1. `context7.resolve-library-id` con `libraryName: '@nestjs/mongoose'`
       2. `context7.get-library-docs` con el ID obtenido para ver la documentación de `MongooseModule.forRoot`.
@@ -396,13 +396,17 @@ open-aware (v1.0.0) - active (up to date)
 - [ ] **T-BE-SETUP-03: Configurar Logs Estructurados con Pino.**
 
   **Objetivo:** Implementar un sistema de logging de alto rendimiento y estructurado (JSON) para mejorar la observabilidad y depuración del backend.
-  - [ ] **T-BE-SETUP-03.1:** Instalar las dependencias de Pino para NestJS.
+  - [x] **T-BE-SETUP-03.1:** Instalar las dependencias de Pino para NestJS.
     - _MCP-Tool:_ `run_shell_command`
     - _Comando:_ `pnpm --filter backend add nestjs-pino pino-http pino-pretty`
-  - [ ] **T-BE-SETUP-03.2:** Configurar el `LoggerModule` de `nestjs-pino` en el `AppModule` del backend.
+  - [x] **T-BE-SETUP-03.2:** Configurar el `LoggerModule` de `nestjs-pino` en el `AppModule` del backend.
     - _MCP-Tool-Flow:_
       1. `context7.get-library-docs` para `nestjs-pino`.
-      2. `replace` en `apps/backend/src/app.module.ts` para inyectar `LoggerModule.forRoot(...)`.
+
+- [ ] **T-BE-SETUP-03.3:** Definir y aplicar convenciones de formato de logs.
+  - _Acción:_ Implementar un interceptor de NestJS para añadir información del usuario autenticado (ID, rol) al contexto del log.
+  - _Acción:_ Configurar `pino-pretty` para usar un `messageFormat` personalizado que incluya timestamp, información del usuario, método y ruta HTTP, y el mensaje del log (ej. `2025-10-16T21:45:07.123Z User:Mauro (admin) | GET /tasks | ✅ Task list fetched`).
+  - _Objetivo:_ Mejorar la trazabilidad y observabilidad de los eventos de la aplicación.
 
 - [ ] **T-BE-SETUP-04: Configurar Documentación de API con Swagger (OpenAPI).**
 
