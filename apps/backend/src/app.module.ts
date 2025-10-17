@@ -23,7 +23,12 @@ import { AppService } from './app.service';
       useFactory: async (configService: ConfigService) => ({
         pinoHttp: {
           level: configService.get<string>('LOG_LEVEL') || 'debug',
+          autoLogging: false,
           redact: ['request.headers.authorization'],
+          customReceivedMessage: (req) =>
+            `Incoming request: ${req.method} ${req.url}`,
+          customSuccessMessage: (req, res) =>
+            `Request completed: ${req.method} ${req.url} ${res.statusCode}`,
           serializers: {
             req: (req) => ({
               id: req.id,
@@ -41,7 +46,7 @@ import { AppService } from './app.service';
                     colorize: true,
                     singleLine: true,
                     levelFirst: false,
-                    translateTime: "UTC:yyyy-mm-dd'T'HH:MM:ss.l'Z'",
+                    translateTime: 'SYS:dd/mm/yyyy HH:MM:ss Z',
                     messageKey: 'msg',
                     errorLikeObjectKeys: ['err', 'error'],
                     ignore: 'pid,hostname,context,req.id,req.stream,res.stream',
