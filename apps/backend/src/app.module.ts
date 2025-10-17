@@ -23,7 +23,9 @@ import { AppService } from './app.service';
       useFactory: async (configService: ConfigService) => ({
         pinoHttp: {
           level: configService.get<string>('LOG_LEVEL') || 'debug',
-          autoLogging: false,
+          autoLogging: {
+            ignore: (req) => req.url === '/health', // opcional, para no loguear healthchecks
+          },
           redact: ['request.headers.authorization'],
           customReceivedMessage: (req) =>
             `Incoming request: ${req.method} ${req.url}`,
@@ -34,8 +36,9 @@ import { AppService } from './app.service';
               id: req.id,
               method: req.method,
               url: req.url,
-              userId: req.userId, // Mantener para el interceptor
-              userRole: req.userRole, // Mantener para el interceptor
+              userId: req.userId, // desde el interceptor
+              userRole: req.userRole, // desde el interceptor
+              userName: req.userName, // desde el interceptor
             }),
           },
           transport:
@@ -49,7 +52,8 @@ import { AppService } from './app.service';
                     translateTime: 'SYS:dd/mm/yyyy HH:MM:ss Z',
                     messageKey: 'msg',
                     errorLikeObjectKeys: ['err', 'error'],
-                    ignore: 'pid,hostname,context,req.id,req.stream,res.stream',
+                    ignore:
+                      'pid,hostname,context,req,res,responseTime,levelLabel',
                   },
                 }
               : undefined,

@@ -15,10 +15,12 @@ export class LoggerInterceptor implements NestInterceptor {
     // Esto se implementará cuando se integre Clerk.
     const userId = 'guest'; // Placeholder
     const userRole = 'anonymous'; // Placeholder
+    const userName = 'name'; // Placeholder
 
     // Añadir la información del usuario al request para que pino-pretty pueda acceder a ella
     request.userId = userId;
     request.userRole = userRole;
+    request.userName = userName;
 
     return next.handle();
   }
