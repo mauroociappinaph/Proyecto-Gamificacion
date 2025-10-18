@@ -436,11 +436,11 @@ open-aware (v1.0.0) - active (up to date)
       ```
   - [ ] **T-BE-SETUP-04.3:** Verificar que los endpoints protegidos requieren token Bearer y que Swagger permite probarlos correctamente.
 
-- [ ] **T-AUTH-CLERK-01 (R-001, R-002): Integrar Clerk para Gestión de Usuarios y Autenticación.**
+- [x] **T-AUTH-CLERK-01 (R-001, R-002): Integrar Clerk para Gestión de Usuarios y Autenticación.**
   - [ ] **T-AUTH-CLERK-01.1: Configuración Inicial de Clerk (Manual).**
     - _Acción:_ Crear una cuenta en Clerk.com, configurar una nueva aplicación, obtener las claves API (PUBLIC_KEY y SECRET_KEY).
     - _Objetivo:_ Preparar el entorno de Clerk para la integración.
-  - [ ] **T-AUTH-CLERK-01.2: Configurar Variables de Entorno para Clerk.**
+  - [x] **T-AUTH-CLERK-01.2: Configurar Variables de Entorno para Clerk.**
     - _Acción:_ Añadir las claves API de Clerk (`CLERK_SECRET_KEY`, `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY`) a los archivos `.env.example` del backend y frontend.
     - _Objetivo:_ Hacer que las credenciales de Clerk estén disponibles para las aplicaciones.
   - [ ] **T-AUTH-CLERK-01.3: Integración en el Backend (NestJS).**
