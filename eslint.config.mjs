@@ -15,6 +15,13 @@ const compat = new FlatCompat({
 export default tseslint.config(
   ...sharedConfig,
   {
+    // Allow require in JS/MJS files
+    files: ["**/*.js", "**/*.mjs"],
+    rules: {
+      "@typescript-eslint/no-var-requires": "off",
+    },
+  },
+  {
     // Backend-specific configurations
     files: ["apps/backend/**/*.ts"],
     languageOptions: {
@@ -54,6 +61,7 @@ export default tseslint.config(
       "apps/frontend/postcss.config.mjs",
       "apps/frontend/next.config.ts",
       "apps/frontend/next-env.d.ts",
+      "apps/backend/webpack.config.js",
     ],
   },
   {
