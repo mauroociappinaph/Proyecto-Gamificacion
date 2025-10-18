@@ -436,6 +436,21 @@ open-aware (v1.0.0) - active (up to date)
       ```
   - [ ] **T-BE-SETUP-04.3:** Verificar que los endpoints protegidos requieren token Bearer y que Swagger permite probarlos correctamente.
 
+- [ ] **T-BE-SETUP-05: Configurar Backend para Notificaciones en Tiempo Real (Ably).**
+
+  **Objetivo:** Implementar la infraestructura de backend para enviar notificaciones en tiempo real.
+  - [ ] **T-BE-SETUP-05.1: Configuración de Ably y Backend.**
+    - _Acción:_ Crear una cuenta en Ably.com, obtener la clave API y añadirla al archivo `.env.example` del backend como `ABLY_API_KEY`.
+    - _Acción:_ Instalar el SDK de Ably en el backend.
+      - _MCP-Tool:_ `run_shell_command`
+      - _Comando:_ `pnpm --filter backend add ably`
+    - _Acción:_ Crear un `AblyService` inyectable en NestJS que inicialice el cliente de Ably y exponga un método para publicar mensajes (ej. `publishToUserChannel(userId: string, eventName: string, data: any)`).
+    - _Objetivo:_ Centralizar la lógica de comunicación con Ably en un solo servicio.
+
+  - [ ] **T-BE-SETUP-05.2: Implementar Autenticación de Clientes de Ably.**
+    - _Acción:_ Crear un nuevo endpoint en el backend (ej. `GET /auth/ably-token`) que genere y devuelva un `tokenRequest` o un `token` de Ably para el usuario autenticado. Esto evita exponer la clave API principal en el frontend.
+    - _Objetivo:_ Asegurar que solo los usuarios autenticados puedan suscribirse a canales de notificaciones.
+
 - [x] **T-AUTH-CLERK-01 (R-001, R-002): Integrar Clerk para Gestión de Usuarios y Autenticación.**
   - [ ] **T-AUTH-CLERK-01.1: Configuración Inicial de Clerk (Manual).**
     - _Acción:_ Crear una cuenta en Clerk.com, configurar una nueva aplicación, obtener las claves API (PUBLIC_KEY y SECRET_KEY).
@@ -443,7 +458,7 @@ open-aware (v1.0.0) - active (up to date)
   - [x] **T-AUTH-CLERK-01.2: Configurar Variables de Entorno para Clerk.**
     - _Acción:_ Añadir las claves API de Clerk (`CLERK_SECRET_KEY`, `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY`) a los archivos `.env.example` del backend y frontend.
     - _Objetivo:_ Hacer que las credenciales de Clerk estén disponibles para las aplicaciones.
-  - [ ] **T-AUTH-CLERK-01.3: Integración en el Backend (NestJS).**
+  - [x] **T-AUTH-CLERK-01.3: Integración en el Backend (NestJS).**
     - _Acción:_ Instalar el SDK de Clerk para Node.js (`@clerk/clerk-sdk-node`).
     - _Acción:_ Crear un `AuthService` para manejar la verificación de tokens JWT de Clerk.
     - _Acción:_ Crear un `ClerkAuthGuard` para proteger los endpoints del backend.
@@ -468,9 +483,25 @@ open-aware (v1.0.0) - active (up to date)
       2. `testsprite_generate_backend_test_plan`.
       3. `testsprite_generate_code_and_execute` para generar y correr los tests.
 
-  - [ ] **T-QA-SETUP-01.7b:** Reactivar y configurar el hook `pre-push` de Husky.
-    - _Acción:_ Una vez que se haya creado el primer test funcional (ya sea en el backend o frontend), reactivar el hook `pre-push` en `.husky/pre-push` para que ejecute `pnpm test`.
-    - _Comando:_ `npx husky set .husky/pre-push "pnpm test"`
+### Evaluación de Plataformas Externas para el Módulo de Juegos
+
+**Objetivo:** Analizar opciones SaaS/BaaS para acelerar el desarrollo de funcionalidades de juego, progresión y ranking.
+
+| Escenario                                            | Plataforma Recomendada   | Beneficios Clave                                                       | Nivel de Control     |
+| ---------------------------------------------------- | ------------------------ | ---------------------------------------------------------------------- | -------------------- |
+| Prototipo rápido, minijuegos o MVP                   | **LootLocker**           | Backend listo, API REST, integración fácil con Clerk y Nest            | 🟢 Bajo setup        |
+| Sistema profesional, escalable, con economía virtual | **PlayFab (Azure)**      | Login, micropagos, estadísticas, logros, integración con Stripe y Ably | 🟢 SaaS robusto      |
+| Control total del servidor y lógica de juego         | **Nakama (Heroic Labs)** | Open Source, matchmaking, ranking, chat, integración vía microservicio | 🟡 Media complejidad |
+| Multijugador masivo con sesiones dedicadas           | **AWS GameLift**         | Alta escalabilidad, control de sesiones, seguridad                     | 🔴 Avanzado          |
+| Solo sincronización en tiempo real                   | **Photon Engine**        | Tiempo real puro (movimientos, colisiones, chat)                       | 🟢 Simple y rápido   |
+
+🔗 **Conclusión:**
+Para la versión MVP, se recomienda usar **LootLocker** o **PlayFab** por su rápida integración y bajo mantenimiento.
+Para la versión v0.2.0 o superior, se podrá evaluar migrar a **Nakama** si se busca control completo del backend de juegos.
+
+- [ ] **T-QA-SETUP-01.7b:** Reactivar y configurar el hook `pre-push` de Husky.
+  - _Acción:_ Una vez que se haya creado el primer test funcional (ya sea en el backend o frontend), reactivar el hook `pre-push` en `.husky/pre-push` para que ejecute `pnpm test`.
+  - _Comando:_ `npx husky set .husky/pre-push "pnpm test"`
 
 - [ ] **T-QA-SETUP-01.7b:** Reactivar y configurar el hook `pre-push` de Husky.
   - _Acción:_ Una vez que se haya creado el primer test funcional (ya sea en el backend o frontend), reactivar el hook `pre-push` en `.husky/pre-push` para que ejecute `pnpm test`.
@@ -539,6 +570,24 @@ open-aware (v1.0.0) - active (up to date)
   - _Acción:_ Envolver la aplicación Next.js con el `ClerkProvider`.
   - _Acción:_ Implementar componentes de UI de Clerk (SignIn, SignUp, UserButton).
   - _Objetivo:_ Habilitar la autenticación en el frontend.
+
+- [ ] **T-FE-NOTIF-01: Integración de Notificaciones con Ably en el Frontend.**
+
+  **Objetivo:** Implementar la recepción y visualización de notificaciones en tiempo real en la interfaz de usuario.
+  - [ ] **T-FE-NOTIF-01.1: Integración del SDK de Ably.**
+    - _Acción:_ Instalar el SDK de Ably en el frontend.
+      - _MCP-Tool:_ `run_shell_command`
+      - _Comando:_ `pnpm --filter frontend add ably`
+    - _Acción:_ Crear un `AblyProvider` en React que obtenga el token del backend (endpoint de `T-BE-SETUP-05.2`), inicialice el cliente de Ably y lo ponga a disposición a través de un contexto o un hook personalizado (ej. `useAbly()`).
+    - _Objetivo:_ Gestionar el ciclo de vida del cliente de Ably en el frontend de forma centralizada.
+
+  - [ ] **T-FE-NOTIF-01.2: Crear UI de Notificaciones y Suscribirse a Eventos.**
+    - _Acción:_ Añadir el componente `Toast` de Shadcn/UI.
+      - _MCP-Tool:_ `run_shell_command`
+      - _Comando:_ `pnpm --filter frontend dlx shadcn-ui@latest add toast`
+    - _Acción:_ En el layout principal del frontend, usar el hook `useAbly` para suscribirse al canal personal del usuario (ej. `private:user-123`).
+    - _Acción:_ Al recibir un mensaje, mostrar una notificación "toast" utilizando el componente de Shadcn.
+    - _Objetivo:_ Proveer feedback visual inmediato al usuario cuando recibe una notificación.
 
 - [ ] **T-FE-SETUP-SHADCN-01: Configurar e inicializar Shadcn/UI.**
   - [ ] **T-FE-SETUP-SHADCN-01.0:** Crear rama `feature/T-FE-SETUP-SHADCN-01-init`.
