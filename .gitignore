@@ -33,3 +33,4 @@ pnpm-debug.log*
 .DS_Store
 .vercel
 apps/backend/dist/
+/docs/clerkyably.md
