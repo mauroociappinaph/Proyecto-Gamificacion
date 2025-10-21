@@ -1,9 +1,10 @@
-import { NestFactory } from '@nestjs/core';
+import { NestFactory, Reflector } from '@nestjs/core';
 import { ValidationPipe } from '@nestjs/common';
 import { AppModule } from './app.module';
 import { Logger } from 'nestjs-pino';
 import { LoggerInterceptor } from './common/interceptors/logger.interceptor'; // Importar el interceptor
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger'; // Importar Swagger
+import { ClerkAuthGuard } from './auth/guards/clerk-auth.guard'; // Importa ClerkAuthGuard
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, { bufferLogs: true });
@@ -20,6 +21,9 @@ async function bootstrap() {
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api-docs', app, document);
+
+  // Aplica el ClerkAuthGuard globalmente
+  app.useGlobalGuards(new ClerkAuthGuard(new Reflector()));
 
   await app.listen(process.env.PORT ?? 3000);
 }

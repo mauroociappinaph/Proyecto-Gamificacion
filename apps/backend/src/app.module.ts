@@ -11,6 +11,7 @@ import { AblyModule } from './ably/ably.module';
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
+      envFilePath: '.env',
     }),
     AuthModule,
     AblyModule,

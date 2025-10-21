@@ -483,9 +483,12 @@ open-aware (v1.0.0) - active (up to date)
     - _Acción:_ Instalar el SDK de Clerk para Node.js (`@clerk/clerk-sdk-node`).
     - _Acción:_ Crear un `AuthService` para manejar la verificación de tokens JWT de Clerk.
     - _Acción:_ Crear un `ClerkAuthGuard` para proteger los endpoints del backend.
+    - _Acción:_ Crear un decorador `@Public()` para marcar rutas que no requieren autenticación.
+    - _Acción:_ Actualizar `app.module.ts` y `main.ts` para la integración global del `ClerkAuthGuard`.
     - _MCP-Tool-Flow:_
       1. `context7.get-library-docs` para `@clerk/clerk-sdk-node`.
-      2. `write_file` para crear `auth.service.ts` y `clerk.guard.ts`.
+      2. `write_file` para crear `auth.service.ts`, `clerk-auth.guard.ts` y `public.decorator.ts`.
+      3. `replace` para actualizar `clerk.strategy.ts`, `auth.module.ts`, `app.module.ts` y `main.ts`.
 
   - [ ] **T-AUTH-CLERK-01.5: Sincronización de Usuarios (Webhook).**
     - _Objetivo:_ Configurar y procesar webhooks de Clerk para mantener la base de datos local sincronizada con los usuarios de Clerk.
