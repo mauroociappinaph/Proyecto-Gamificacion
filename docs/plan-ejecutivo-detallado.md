@@ -442,7 +442,7 @@ open-aware (v1.0.0) - active (up to date)
 - [ ] **T-BE-SETUP-05: Configurar Backend para Notificaciones en Tiempo Real (Ably).**
   - _Objetivo General:_ Implementar la infraestructura de backend para enviar y autenticar notificaciones en tiempo real, asegurando que solo los usuarios correctos puedan suscribirse a sus canales.
 
-  - [ ] **T-BE-SETUP-05.1: Configuración de Ably y Creación del Servicio.**
+  - [x] **T-BE-SETUP-05.1: Configuración de Ably y Creación del Servicio.**
     - _Acción:_ Añadir la clave de API de Ably al entorno, instalar el SDK y crear un servicio centralizado para manejar la lógica de Ably.
     - _MCP-Tool-Flow:_
       - **1. Configuración:**
