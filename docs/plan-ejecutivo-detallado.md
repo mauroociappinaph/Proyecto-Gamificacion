@@ -6,6 +6,9 @@ Este documento adapta el `Plan_de_Tareas.md` a una estructura de checklist granu
 
 # Herramientas de MCP servers disponibles para usar:
 
+🟢 default_api - Ready (3 tools relevantes para este plan)
+Tools: - run_shell_command - read_file - google_web_search
+
 🟢 sequential-thinking - Ready (1 tool)
 Tools: - sequentialthinking
 
@@ -437,19 +440,37 @@ open-aware (v1.0.0) - active (up to date)
   - [ ] **T-BE-SETUP-04.3:** Verificar que los endpoints protegidos requieren token Bearer y que Swagger permite probarlos correctamente.
 
 - [ ] **T-BE-SETUP-05: Configurar Backend para Notificaciones en Tiempo Real (Ably).**
+  - _Objetivo General:_ Implementar la infraestructura de backend para enviar y autenticar notificaciones en tiempo real, asegurando que solo los usuarios correctos puedan suscribirse a sus canales.
 
-  **Objetivo:** Implementar la infraestructura de backend para enviar notificaciones en tiempo real.
-  - [ ] **T-BE-SETUP-05.1: Configuración de Ably y Backend.**
-    - _Acción:_ Crear una cuenta en Ably.com, obtener la clave API y añadirla al archivo `.env.example` del backend como `ABLY_API_KEY`.
-    - _Acción:_ Instalar el SDK de Ably en el backend.
-      - _MCP-Tool:_ `run_shell_command`
-      - _Comando:_ `pnpm --filter backend add ably`
-    - _Acción:_ Crear un `AblyService` inyectable en NestJS que inicialice el cliente de Ably y exponga un método para publicar mensajes (ej. `publishToUserChannel(userId: string, eventName: string, data: any)`).
-    - _Objetivo:_ Centralizar la lógica de comunicación con Ably en un solo servicio.
+  - [ ] **T-BE-SETUP-05.1: Configuración de Ably y Creación del Servicio.**
+    - _Acción:_ Añadir la clave de API de Ably al entorno, instalar el SDK y crear un servicio centralizado para manejar la lógica de Ably.
+    - _MCP-Tool-Flow:_
+      - **1. Configuración:**
+        - `fast_filesystem.fast_edit_block` para añadir `ABLY_API_KEY=` al archivo `apps/backend/.env.example`.
+        - `run_shell_command` con el comando `pnpm --filter backend add ably`.
+      - **2. Investigación:**
+        - `context7.get-library-docs` con `libraryName: 'ably'` y `topic: 'nestjs'` para entender cómo registrar el cliente de Ably como un proveedor en el módulo de notificaciones.
+      - **3. Implementación:**
+        - `fast_filesystem.fast_write_file` para crear `apps/backend/src/modules/notifications/ably.service.ts`.
+        - En este servicio, se debe inicializar el cliente de Ably usando la `ABLY_API_KEY` (inyectada a través del `ConfigService` de NestJS) y exponer un método `publishToUserChannel(userId: string, eventName: string, data: any)`.
 
-  - [ ] **T-BE-SETUP-05.2: Implementar Autenticación de Clientes de Ably.**
-    - _Acción:_ Crear un nuevo endpoint en el backend (ej. `GET /auth/ably-token`) que genere y devuelva un `tokenRequest` o un `token` de Ably para el usuario autenticado. Esto evita exponer la clave API principal en el frontend.
-    - _Objetivo:_ Asegurar que solo los usuarios autenticados puedan suscribirse a canales de notificaciones.
+  - [ ] **T-BE-SETUP-05.2: Implementar Endpoint de Autenticación de Tokens.**
+    - _Acción:_ Crear un endpoint seguro que genere tokens de Ably para los clientes del frontend, evitando exponer la clave API principal.
+    - _MCP-Tool-Flow:_
+      - **1. Investigación:**
+        - `open-aware.ask` con `query: "How to create a secure Ably token authentication endpoint in a NestJS controller"` para obtener un ejemplo de implementación robusto.
+      - **2. Implementación:**
+        - `fast_filesystem.fast_edit_block` para añadir un nuevo método, por ejemplo `getAblyToken()`, en el `AuthController` (`apps/backend/src/modules/auth/auth.controller.ts`).
+        - Proteger este endpoint con el `ClerkAuthGuard` para asegurar que solo los usuarios autenticados puedan solicitar un token.
+        - El método debe usar el `AblyService` para generar un `tokenRequest` para el `userId` del usuario autenticado.
+
+  - [ ] **T-BE-SETUP-05.3: Pruebas del Endpoint y Servicio.**
+    - _Acción:_ Verificar que el endpoint de tokens funciona correctamente y que el servicio puede publicar mensajes.
+    - _MCP-Tool-Flow:_
+      - **1. Prueba de Endpoint:** Usar `postman.createCollectionRequest` para hacer una petición `GET` al endpoint `/auth/ably-token`. Se debe incluir un token de autenticación válido para pasar el `ClerkAuthGuard` y verificar que la respuesta es un token de Ably.
+      - **2. Prueba de Servicio (Automatizada):** Usar `TestSprite` para generar pruebas unitarias para `AblyService`, asegurándose de simular (mock) el cliente de Ably para no depender de una conexión real durante las pruebas.
+        - `testsprite_generate_backend_test_plan` enfocado en `ably.service.ts`.
+        - `testsprite_generate_code_and_execute`.
 
 - [x] **T-AUTH-CLERK-01 (R-001, R-002): Integrar Clerk para Gestión de Usuarios y Autenticación.**
   - [ ] **T-AUTH-CLERK-01.1: Configuración Inicial de Clerk (Manual).**
@@ -467,21 +488,111 @@ open-aware (v1.0.0) - active (up to date)
       2. `write_file` para crear `auth.service.ts` y `clerk.guard.ts`.
 
   - [ ] **T-AUTH-CLERK-01.5: Sincronización de Usuarios (Webhook).**
-    - _Acción:_ Configurar un webhook en Clerk para notificar al backend sobre eventos de usuario (creación, actualización, eliminación).
-    - _Acción:_ Implementar un endpoint en el backend (`/webhooks/clerk`) para recibir y procesar estos eventos, sincronizando los usuarios con la base de datos local.
-    - _Objetivo:_ Mantener la base de datos local sincronizada con los usuarios de Clerk.
+    - _Objetivo:_ Configurar y procesar webhooks de Clerk para mantener la base de datos local sincronizada con los usuarios de Clerk.
 
-- [ ] **T-BE-GAME-01 (R-003, R-004): Módulos de Juegos, Tareas y Recompensas.**
-  - _Sugerencia de Herramienta:_ Utilizar la extensión `mongodb` de Gemini CLI para verificar la creación de juegos, tareas y recompensas en la base de datos.
+    - [ ] **T-AUTH-CLERK-01.5.1: Configuración del Webhook en Clerk (Manual).**
+      - _Acción:_ Crear un endpoint de webhook en el Dashboard de Clerk.
+      - _Acción:_ Seleccionar los eventos a los que suscribirse (`user.created`, `user.updated`, `user.deleted`).
+      - _Acción:_ Copiar y guardar el "Webhook Secret" de Clerk.
 
-  - [ ] **T-BE-GAME-01.1:** Generar los módulos, servicios y controladores.
+    - [ ] **T-AUTH-CLERK-01.5.2: Configuración del Entorno en NestJS.**
+      - _Acción:_ Añadir `CLERK_WEBHOOK_SECRET` al archivo `.env.example` del backend.
+        - _MCP-Tool:_ `fast_filesystem.fast_write_file`
+      - _Acción:_ Instalar dependencias: `svix` y `@types/svix`.
+        - _MCP-Tool:_ `default_api.run_shell_command`
+        - _Comando:_ `pnpm --filter backend add svix @types/svix`
+      - _Acción:_ Asegurar que `ConfigModule` esté configurado para cargar variables de entorno.
+        - _MCP-Tool:_ `default_api.read_file`
+
+    - [ ] **T-AUTH-CLERK-01.5.3: Creación del Módulo y Controlador de Webhook.**
+      - _Acción:_ Generar un módulo `WebhooksModule` y un controlador `ClerkController` en el backend.
+        - _MCP-Tool:_ `default_api.run_shell_command` (Comando: `pnpm --filter backend exec nest generate module webhooks` y `pnpm --filter backend exec nest generate controller webhooks/clerk`)
+      - _Acción:_ Importar `WebhooksModule` en `AppModule`.
+        - _MCP-Tool:_ `default_api.read_file` (para leer `apps/backend/src/app.module.ts`)
+        - _MCP-Tool:_ `fast_filesystem.fast_edit_block` (para añadir la importación y la entrada en el array `imports`)
+
+    - [ ] **T-AUTH-CLERK-01.5.4: Implementación de la Lógica de Verificación y Procesamiento.**
+      - _Acción:_ En `ClerkController`, implementar el endpoint `POST /webhooks/clerk`.
+      - _Acción:_ Usar `svix` para verificar la firma del webhook con `CLERK_WEBHOOK_SECRET`.
+      - _Acción:_ Parsear el evento de Clerk y usar un `switch` para manejar los tipos de evento (`user.created`, `user.updated`, `user.deleted`).
+      - _Acción:_ Implementar la lógica para sincronizar los datos del usuario con la base de datos local para cada tipo de evento.
+      - _MCP-Tool-Flow:_
+        - **Investigación (Flujo recomendado):**
+          - **Paso 1 (Búsqueda Amplia):** Usar `github.search_code` con `query: 'Webhook verification svix nestjs language:typescript'` para una búsqueda inicial de implementaciones directas en GitHub.
+          - **Paso 2 (Búsqueda Semántica):** Usar `open-aware.get_context` o `open-aware.ask` con `query: 'How to implement Clerk webhook with svix in a NestJS controller'` para obtener ejemplos de código contextuales y explicaciones.
+          - **Paso 3 (Investigación Profunda):** Si los resultados anteriores no son suficientes, usar `open-aware.deep_research` para un análisis más exhaustivo de los repositorios más prometedores.
+        - **Implementación:** `fast-filesystem.fast_edit_block` para escribir la lógica del controlador en `apps/backend/src/webhooks/clerk.controller.ts` basándose en la investigación.
+
+    - [ ] **T-AUTH-CLERK-01.5.5: Habilitar `rawBody` en NestJS.**
+      - _Acción:_ Modificar `apps/backend/src/main.ts` para incluir `rawBody: true` en la configuración de `NestFactory.create`.
+      - _Objetivo:_ Permitir que `svix` acceda al cuerpo crudo de la solicitud para la verificación de la firma.
+      - _MCP-Tool-Flow:_
+        - **Implementación:** `fast-filesystem.fast_edit_block` para modificar `apps/backend/src/main.ts`.
+
+    - [ ] **T-AUTH-CLERK-01.5.6: Pruebas Locales con `ngrok` (Opcional, para desarrollo).**
+      - _Acción:_ Instalar y configurar `ngrok`.
+      - _Acción:_ Exponer el endpoint local del webhook a internet usando `ngrok`.
+      - _Acción:_ Actualizar la URL del endpoint en el Dashboard de Clerk con la URL de `ngrok`.
+      - _Acción:_ Enviar eventos de prueba desde Clerk para verificar la integración.
+      - _MCP-Tool-Flow:_
+        - **Pruebas (Alternativa a ngrok):** `postman.createCollection` y `postman.createCollectionRequest` para simular los eventos de webhook de Clerk localmente.
+        - **Pruebas (Automatizadas):** `TestSprite.generate_backend_test_plan` y `TestSprite.generate_code_and_execute` para crear y correr tests automatizados del endpoint.
+
+- [ ] **T-BE-GAME-01: Módulos de Juegos, Tareas y Recompensas.**
+  - _Objetivo General:_ Desarrollar el núcleo de la lógica de gamificación, incluyendo la gestión de juegos, la completitud de tareas y la asignación de recompensas, basándose en los requerimientos `R-003` y `R-004`.
+
+  - [ ] **T-BE-GAME-01.1: Generar Módulos, Controladores y Servicios.**
+    - _Acción:_ Crear la estructura de carpetas y archivos base para los módulos `games`, `tasks`, y `rewards`.
     - _MCP-Tool:_ `run_shell_command`
-    - _Comando:_ `pnpm --filter backend exec nest g module games && ...` (repetir para tasks y rewards).
-  - [ ] **T-BE-GAME-01.6:** Escribir tests unitarios y de integración.
+    - _Comando:_ `pnpm --filter backend exec nest g module games && pnpm --filter backend exec nest g controller games && pnpm --filter backend exec nest g service games` (repetir para `tasks` y `rewards`).
+
+  - [ ] **T-BE-GAME-01.2: Definir Schemas y DTOs en `common-types`.**
+    - _Acción:_ Basado en `Documento de requerimientos #006 V2.docx.pdf` (páginas 19-21) y `arquitectura-tecnica.md`, definir las interfaces TypeScript para `Game`, `Task`, y `Reward` en el paquete `packages/common-types`.
     - _MCP-Tool-Flow:_
-      1. `testsprite_bootstrap_tests` con `type: 'backend'`.
-      2. `testsprite_generate_backend_test_plan`.
-      3. `testsprite_generate_code_and_execute` para generar y correr los tests.
+      - **1. Implementación:** Usar `fast_filesystem.fast_write_file` para crear/actualizar los archivos de interfaz (ej. `packages/common-types/src/interfaces/game.interface.ts`).
+      - **2. Verificación:** Usar `fast_filesystem.fast_read_file` para confirmar que los tipos exportados en el `index.ts` del paquete son correctos.
+
+  - [ ] **T-BE-GAME-01.3: Implementar los Schemas de Mongoose.**
+    - _Acción:_ Convertir las interfaces del paso anterior en Schemas de Mongoose funcionales dentro de cada módulo respectivo.
+    - _MCP-Tool-Flow:_
+      - **1. Investigación:** Usar `open-aware.get_context` con `query: "Mongoose schema with enums and nested objects in NestJS"` para ver las mejores prácticas.
+      - **2. Implementación:** Usar `fast_filesystem.fast_write_file` para crear los archivos de schema (ej. `apps/backend/src/modules/games/schemas/game.schema.ts`).
+      - **3. Registro:** Usar `fast_filesystem.fast_edit_block` para importar y registrar los schemas en sus respectivos módulos (ej. en `games.module.ts` usando `MongooseModule.forFeature([...])`).
+
+  - [ ] **T-BE-GAME-01.4: Implementar la Lógica de Negocio en los Servicios.**
+    - _Acción:_ Codificar la lógica principal en las clases de servicio.
+    - _Subtareas:_
+      - **GamesService:** Implementar métodos CRUD para la gestión de juegos.
+      - **TasksService:** Implementar CRUD para tareas y la lógica para `completeTask`.
+      - **RewardsService:** Implementar la lógica para calcular y otorgar recompensas, escuchando eventos del sistema.
+    - _MCP-Tool-Flow:_
+      - **1. Investigación:** Usar `open-aware.ask` con `query: "How to handle business logic for a task completion event in a NestJS service"` para obtener un enfoque claro.
+      - **2. Implementación:** Usar `fast_filesystem.fast_edit_block` para añadir los métodos a los archivos de servicio correspondientes.
+
+  - [ ] **T-BE-GAME-01.5: Implementar los Endpoints en los Controladores.**
+    - _Acción:_ Exponer la lógica de los servicios a través de los endpoints RESTful definidos en `arquitectura-tecnica.md`.
+    - _Subtareas:_
+      - **GamesController:** Endpoints públicos para listar/ver juegos. Endpoints de admin para gestionarlos.
+      - **TasksController:** Endpoints protegidos para que los usuarios vean y completen tareas.
+      - **RewardsController:** Endpoints protegidos para que los usuarios reclamen recompensas.
+    - _MCP-Tool-Flow:_
+      - **1. Investigación:** Usar `github.search_code` con `query: 'UseGuards(ClerkAuthGuard) @Get() language:typescript'` para ver ejemplos de protección de endpoints.
+      - **2. Implementación:** Usar `fast_filesystem.fast_edit_block` para añadir los métodos a los controladores, incluyendo decoradores `@Get()`, `@Post()`, `@UseGuards()`, etc.
+
+  - [ ] **T-BE-GAME-01.6: Integrar Comunicación Asíncrona con Eventos.**
+    - _Acción:_ Implementar el flujo de eventos definido en la arquitectura para desacoplar los módulos.
+    - _Subtareas:_
+      - En `TasksService`, al completar una tarea, emitir el evento `task.completed` usando `EventEmitter2`.
+      - En `RewardsService`, crear un listener con `@OnEvent('task.completed')` que reciba el payload y dispare la lógica de recompensa.
+    - _MCP-Tool-Flow:_
+      - **1. Implementación:** Usar `fast_filesystem.fast_edit_block` para inyectar `EventEmitter2` y añadir la lógica de emisión y escucha en los servicios.
+
+  - [ ] **T-BE-GAME-01.7: Escribir Tests Unitarios y de Integración.**
+    - _Acción:_ Asegurar la calidad y el correcto funcionamiento de la nueva lógica.
+    - _MCP-Tool-Flow:_
+      - **1. Bootstrap:** `testsprite_bootstrap_tests` con `type: 'backend'`.
+      - **2. Planificación:** `testsprite_generate_backend_test_plan` para que analice los nuevos módulos y proponga un plan de pruebas.
+      - **3. Ejecución:** `testsprite_generate_code_and_execute` para generar el código de los tests y ejecutarlos, validando los resultados.
 
 ### Evaluación de Plataformas Externas para el Módulo de Juegos
 
@@ -499,28 +610,67 @@ open-aware (v1.0.0) - active (up to date)
 Para la versión MVP, se recomienda usar **LootLocker** o **PlayFab** por su rápida integración y bajo mantenimiento.
 Para la versión v0.2.0 o superior, se podrá evaluar migrar a **Nakama** si se busca control completo del backend de juegos.
 
-- [ ] **T-QA-SETUP-01.7b:** Reactivar y configurar el hook `pre-push` de Husky.
+- [x] **T-QA-SETUP-01.7b:** Reactivar y configurar el hook `pre-push` de Husky.
   - _Acción:_ Una vez que se haya creado el primer test funcional (ya sea en el backend o frontend), reactivar el hook `pre-push` en `.husky/pre-push` para que ejecute `pnpm test`.
   - _Comando:_ `npx husky set .husky/pre-push "pnpm test"`
 
-- [ ] **T-QA-SETUP-01.7b:** Reactivar y configurar el hook `pre-push` de Husky.
-  - _Acción:_ Una vez que se haya creado el primer test funcional (ya sea en el backend o frontend), reactivar el hook `pre-push` en `.husky/pre-push` para que ejecute `pnpm test`.
-  - _Comando:_ `npx husky set .husky/pre-push "pnpm test"`
+- [ ] **T-BE-PAY-01: Módulos de Wallet y Pagos (R-010, R-005).**
+  - _Objetivo General:_ Construir los módulos para la gestión de fondos de los usuarios (`Wallet`) y la integración con la pasarela de pago (`Payments`), permitiendo a los usuarios cargar y retirar dinero de la plataforma.
 
-- [ ] **T-BE-PAY-01 (R-010, R-005): Módulos de Wallet y Pagos.**
-  - _Sugerencia de Herramienta (Investigación):_ Al integrar Stripe, se puede usar `open-aware` para encontrar implementaciones de referencia y patrones de seguridad en proyectos de código abierto.
-
-  - [ ] **T-BE-PAY-01.4:** Instalar e integrar el SDK de Stripe.
+  - [ ] **T-BE-PAY-01.1: Generar Módulos, Controladores y Servicios.**
+    - _Acción:_ Crear la estructura base para los módulos `wallets` y `payments`.
     - _MCP-Tool:_ `run_shell_command`
-    - _Comando:_ `pnpm --filter backend add stripe`
-  - [ ] **T-BE-PAY-01.5:** Implementar en un `PaymentsService` la lógica para crear `PaymentIntents`.
+    - _Comando:_ `pnpm --filter backend exec nest g module wallets && pnpm --filter backend exec nest g controller wallets && pnpm --filter backend exec nest g service wallets` (repetir para `payments`).
+
+  - [ ] **T-BE-PAY-01.2: Definir Schemas y DTOs en `common-types`.**
+    - _Acción:_ Basado en `arquitectura-tecnica.md`, definir las interfaces TypeScript para `WalletDto` y `TransactionDto` en el paquete `packages/common-types`.
     - _MCP-Tool-Flow:_
-      1. `stripe.search_stripe_documentation` con `question: 'create payment intent with nestjs'`.
-      2. `replace` para implementar la lógica en `payments.service.ts`.
-  - [ ] **T-BE-PAY-01.7:** Escribir tests para la lógica de pagos y webhooks.
+      - **1. Implementación:** Usar `fast_filesystem.fast_write_file` para crear `packages/common-types/src/interfaces/wallet.interface.ts` y `transaction.interface.ts`.
+      - **2. Verificación:** Usar `fast_filesystem.fast_read_file` para confirmar que los tipos se han exportado correctamente en el `index.ts` del paquete.
+
+  - [ ] **T-BE-PAY-01.3: Implementar Schemas de Mongoose.**
+    - _Acción:_ Crear los schemas de Mongoose para las colecciones `wallets` y `transactions`.
     - _MCP-Tool-Flow:_
-      1. `testsprite_generate_backend_test_plan` enfocado en el módulo de pagos.
-      2. `testsprite_generate_code_and_execute`.
+      - **1. Investigación:** Usar `open-aware.get_context` con `query: "Mongoose schema for financial transactions with Decimal128"` para asegurar la precisión en los datos monetarios.
+      - **2. Implementación:** Usar `fast_filesystem.fast_write_file` para crear los archivos `wallet.schema.ts` y `transaction.schema.ts` en sus respectivos módulos.
+      - **3. Registro:** Usar `fast_filesystem.fast_edit_block` para importar y registrar los schemas en `wallets.module.ts` y `payments.module.ts`.
+
+  - [ ] **T-BE-PAY-01.4: Instalar e Integrar el SDK de Stripe.**
+    - _Acción:_ Añadir y configurar el SDK oficial de Stripe.
+    - _MCP-Tool-Flow:_
+      - **1. Instalación:** `run_shell_command` con `pnpm --filter backend add stripe`.
+      - **2. Configuración:** `fast_filesystem.fast_edit_block` para añadir `STRIPE_API_KEY` y `STRIPE_WEBHOOK_SECRET` al archivo `.env.example`.
+
+  - [ ] **T-BE-PAY-01.5: Implementar Lógica de Pagos y Wallets.**
+    - _Acción:_ Desarrollar la lógica de negocio para manejar la creación de intentos de pago y la gestión de saldos.
+    - _MCP-Tool-Flow:_
+      - **1. Investigación:** Usar `stripe.search_stripe_documentation` con `question: 'how to create and confirm a PaymentIntent in nestjs'` para obtener la documentación oficial.
+      - **2. Implementación:** Usar `fast_filesystem.fast_edit_block` para añadir los métodos `createPaymentIntent` en `payments.service.ts` y los métodos de gestión de saldo en `wallets.service.ts`.
+
+  - [ ] **T-BE-PAY-01.6: Implementar Webhook de Stripe.**
+    - _Acción:_ Crear un endpoint seguro para recibir y procesar eventos de Stripe, como `payment_intent.succeeded`.
+    - _MCP-Tool-Flow:_
+      - **1. Investigación:** Usar `open-aware.ask` con `query: 'How to securely implement a Stripe webhook handler in NestJS'`.
+      - **2. Implementación:** Usar `fast_filesystem.fast_write_file` para crear un `stripe.controller.ts` y usar `fast_filesystem.fast_edit_block` para añadir la lógica que verifica la firma del webhook y emite un evento local (`payment.succeeded`).
+
+  - [ ] **T-BE-PAY-01.7: Implementar Endpoints de API.**
+    - _Acción:_ Exponer las funcionalidades de wallet y pagos a través de la API.
+    - _MCP-Tool-Flow:_
+      - **Implementación:** Usar `fast_filesystem.fast_edit_block` para implementar los endpoints definidos en `arquitectura-tecnica.md` (ej. `/wallet`, `/payments/create-intent`) en los controladores correspondientes, protegiéndolos con `ClerkAuthGuard`.
+
+  - [ ] **T-BE-PAY-01.8: Escribir Tests para Pagos y Webhooks.**
+    - _Acción:_ Asegurar la calidad y el correcto funcionamiento de la nueva lógica de pagos.
+    - _MCP-Tool-Flow:_
+      - **1. Planificación:** `testsprite_generate_backend_test_plan` con un enfoque en los módulos `payments` y `wallets`.
+      - **2. Ejecución:** `testsprite_generate_code_and_execute` para generar y correr los tests, simulando (mocking) el SDK de Stripe y las llamadas a webhooks.
+
+  - [ ] **T-BE-PAY-01.9: Pruebas de Integración E2E con la API de Stripe.**
+    - _Acción:_ Verificar la integración de extremo a extremo utilizando las herramientas de Stripe para simular acciones de cliente.
+    - _MCP-Tool-Flow:_
+      - **1. Crear datos de prueba:** Usar `stripe.create_product` y `stripe.create_price` para configurar un producto de prueba.
+      - **2. Simular un pago:** Usar `stripe.create_payment_link` para generar un enlace de pago.
+      - **3. Verificar Webhook:** "Pagar" el enlace en el entorno de prueba de Stripe y verificar que el endpoint `/webhooks/stripe` procesa el evento `payment_intent.succeeded`.
+      - **4. Validar Saldo:** Usar un endpoint de `GET /wallet` para confirmar que el saldo del usuario se actualizó.
 
 - [ ] **T-BE-SEC-01: Implementar Guards de Seguridad para Webhooks.**
 
