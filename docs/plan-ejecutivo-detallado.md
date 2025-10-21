@@ -508,7 +508,7 @@ open-aware (v1.0.0) - active (up to date)
       - _Acción:_ Asegurar que `ConfigModule` esté configurado para cargar variables de entorno.
         - _MCP-Tool:_ `default_api.read_file`
 
-    - [ ] **T-AUTH-CLERK-01.5.3: Creación del Módulo y Controlador de Webhook.**
+    - [x] **T-AUTH-CLERK-01.5.3: Creación del Módulo y Controlador de Webhook.**
       - _Acción:_ Generar un módulo `WebhooksModule` y un controlador `ClerkController` en el backend.
         - _MCP-Tool:_ `default_api.run_shell_command` (Comando: `pnpm --filter backend exec nest generate module webhooks` y `pnpm --filter backend exec nest generate controller webhooks/clerk`)
       - _Acción:_ Importar `WebhooksModule` en `AppModule`.

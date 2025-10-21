@@ -6,6 +6,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
 import { AblyModule } from './ably/ably.module';
+import { WebhooksModule } from './webhooks/webhooks.module';
 
 @Module({
   imports: [
@@ -65,6 +66,7 @@ import { AblyModule } from './ably/ably.module';
         },
       }),
     }),
+    WebhooksModule,
   ],
   controllers: [AppController],
   providers: [AppService],
