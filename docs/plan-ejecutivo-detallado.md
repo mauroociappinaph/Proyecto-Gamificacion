@@ -492,14 +492,14 @@ open-aware (v1.0.0) - active (up to date)
 
   - [ ] **T-AUTH-CLERK-01.5: Sincronización de Usuarios (Webhook).**
     - _Objetivo:_ Configurar y procesar webhooks de Clerk para mantener la base de datos local sincronizada con los usuarios de Clerk.
+      - _Acción:_ Copiar y guardar el "Webhook Secret" de Clerk.
 
     - [x] **T-AUTH-CLERK-01.5.1: Configuración del Webhook en Clerk (Manual).**
       - _Nota:_ Detalles de la configuración y el Webhook Secret se encuentran en `docs/clerkyably.md`.
       - _Acción:_ Crear un endpoint de webhook en el Dashboard de Clerk.
       - _Acción:_ Seleccionar los eventos a los que suscribirse (`user.created`, `user.updated`, `user.deleted`).
-      - _Acción:_ Copiar y guardar el "Webhook Secret" de Clerk.
 
-    - [ ] **T-AUTH-CLERK-01.5.2: Configuración del Entorno en NestJS.**
+    - [x] **T-AUTH-CLERK-01.5.2: Configuración del Entorno en NestJS.**
       - _Acción:_ Añadir `CLERK_WEBHOOK_SECRET` al archivo `.env` del backend.
         - _MCP-Tool:_ `fast_filesystem.fast_write_file`
       - _Acción:_ Instalar dependencias: `svix` y `@types/svix`.
