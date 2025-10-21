@@ -39,28 +39,29 @@ export class ClerkStrategy extends PassportStrategy(Strategy, 'clerk') {
       throw new UnauthorizedException('Invalid token payload: no subject.');
     }
 
+    let user;
     try {
-      const user = await this.clerkClient.users.getUser(payload.sub);
-
-      if (!user) {
-        throw new UnauthorizedException('User not found.');
-      }
-
-      const clerkUser: ClerkUser = {
-        id: user.id,
-        emailAddresses: user.emailAddresses.map((ea) => ({
-          id: ea.id,
-          emailAddress: ea.emailAddress,
-        })),
-        firstName: user.firstName,
-        lastName: user.lastName,
-        imageUrl: user.imageUrl,
-      };
-
-      return clerkUser;
+      user = await this.clerkClient.users.getUser(payload.sub);
     } catch (error) {
-      console.error('Clerk user validation error:', error);
+      console.error('Clerk API error during user fetch:', error);
       throw new UnauthorizedException('Failed to validate user with Clerk.');
     }
+
+    if (!user) {
+      throw new UnauthorizedException('User not found.');
+    }
+
+    const clerkUser: ClerkUser = {
+      id: user.id,
+      emailAddresses: user.emailAddresses.map((ea) => ({
+        id: ea.id,
+        emailAddress: ea.emailAddress,
+      })),
+      firstName: user.firstName,
+      lastName: user.lastName,
+      imageUrl: user.imageUrl,
+    };
+
+    return clerkUser;
   }
 }

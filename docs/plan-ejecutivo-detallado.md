@@ -454,7 +454,7 @@ open-aware (v1.0.0) - active (up to date)
         - `fast_filesystem.fast_write_file` para crear `apps/backend/src/modules/notifications/ably.service.ts`.
         - En este servicio, se debe inicializar el cliente de Ably usando la `ABLY_API_KEY` (inyectada a través del `ConfigService` de NestJS) y exponer un método `publishToUserChannel(userId: string, eventName: string, data: any)`.
 
-  - [ ] **T-BE-SETUP-05.2: Implementar Endpoint de Autenticación de Tokens.**
+  - [x] **T-BE-SETUP-05.2: Implementar Endpoint de Autenticación de Tokens.**
     - _Acción:_ Crear un endpoint seguro que genere tokens de Ably para los clientes del frontend, evitando exponer la clave API principal.
     - _MCP-Tool-Flow:_
       - **1. Investigación:**
@@ -499,7 +499,7 @@ open-aware (v1.0.0) - active (up to date)
       - _Acción:_ Copiar y guardar el "Webhook Secret" de Clerk.
 
     - [ ] **T-AUTH-CLERK-01.5.2: Configuración del Entorno en NestJS.**
-      - _Acción:_ Añadir `CLERK_WEBHOOK_SECRET` al archivo `.env.example` del backend.
+      - _Acción:_ Añadir `CLERK_WEBHOOK_SECRET` al archivo `.env` del backend.
         - _MCP-Tool:_ `fast_filesystem.fast_write_file`
       - _Acción:_ Instalar dependencias: `svix` y `@types/svix`.
         - _MCP-Tool:_ `default_api.run_shell_command`
@@ -719,10 +719,21 @@ Para la versión v0.2.0 o superior, se podrá evaluar migrar a **Nakama** si se 
 **Nota:** Todos los tipos para las respuestas de la API y DTOs deben importarse desde el paquete `packages/common-types`.
 
 - [ ] **T-FE-AUTH-CLERK-01: Integración en el Frontend (Next.js).**
-  - _Acción:_ Instalar el SDK de Clerk para React (`@clerk/nextjs`).
-  - _Acción:_ Envolver la aplicación Next.js con el `ClerkProvider`.
-  - _Acción:_ Implementar componentes de UI de Clerk (SignIn, SignUp, UserButton).
-  - _Objetivo:_ Habilitar la autenticación en el frontend.
+  - _Objetivo:_ Habilitar la autenticación en el frontend utilizando el SDK de Clerk para Next.js.
+  - _MCP-Tool-Flow:_
+    - **1. Instalación:**
+      - `run_shell_command` con `pnpm --filter frontend add @clerk/nextjs`.
+    - **2. Investigación:**
+      - `context7.get-library-docs` con `libraryName: '@clerk/nextjs'` para obtener la guía de inicio rápido y ver cómo envolver la aplicación con `ClerkProvider`.
+    - **3. Implementación:**
+      - `replace` en `apps/frontend/src/app/layout.tsx` para importar y añadir el `ClerkProvider` alrededor del `<body>`.
+      - `write_file` para crear las páginas de `sign-in` y `sign-up` (ej. `apps/frontend/src/app/sign-in/[[...sign-in]]/page.tsx`) que exportan los componentes de Clerk.
+
+- [ ] **T-FE-AUTH-CLERK-02: Verificación de Endpoints de Backend.**
+  - _Objetivo:_ Utilizar el token de sesión obtenido en el frontend para verificar que los endpoints protegidos del backend (`/` y `/ably/token`) funcionan correctamente.
+  - _Acción:_ Una vez que un usuario inicia sesión en el frontend, obtener el token JWT de la sesión.
+  - _Acción:_ Realizar una petición `curl` (o usar una herramienta de cliente API) al endpoint `http://localhost:3001/ably/token` incluyendo el `Authorization: Bearer <TOKEN>` header.
+  - _Criterio de Aceptación:_ La petición debe devolver un estado 200 OK y un objeto de solicitud de token de Ably.
 
 - [ ] **T-FE-NOTIF-01: Integración de Notificaciones con Ably en el Frontend.**
 
