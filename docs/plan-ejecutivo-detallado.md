@@ -515,7 +515,7 @@ open-aware (v1.0.0) - active (up to date)
         - _MCP-Tool:_ `default_api.read_file` (para leer `apps/backend/src/app.module.ts`)
         - _MCP-Tool:_ `fast_filesystem.fast_edit_block` (para añadir la importación y la entrada en el array `imports`)
 
-    - [ ] **T-AUTH-CLERK-01.5.4: Implementación de la Lógica de Verificación y Procesamiento.**
+    - [x] **T-AUTH-CLERK-01.5.4: Implementación de la Lógica de Verificación y Procesamiento.**
       - _Acción:_ En `ClerkController`, implementar el endpoint `POST /webhooks/clerk`.
       - _Acción:_ Usar `svix` para verificar la firma del webhook con `CLERK_WEBHOOK_SECRET`.
       - _Acción:_ Parsear el evento de Clerk y usar un `switch` para manejar los tipos de evento (`user.created`, `user.updated`, `user.deleted`).
@@ -526,7 +526,6 @@ open-aware (v1.0.0) - active (up to date)
           - **Paso 2 (Búsqueda Semántica):** Usar `open-aware.get_context` o `open-aware.ask` con `query: 'How to implement Clerk webhook with svix in a NestJS controller'` para obtener ejemplos de código contextuales y explicaciones.
           - **Paso 3 (Investigación Profunda):** Si los resultados anteriores no son suficientes, usar `open-aware.deep_research` para un análisis más exhaustivo de los repositorios más prometedores.
         - **Implementación:** `fast-filesystem.fast_edit_block` para escribir la lógica del controlador en `apps/backend/src/webhooks/clerk.controller.ts` basándose en la investigación.
-
     - [ ] **T-AUTH-CLERK-01.5.5: Habilitar `rawBody` en NestJS.**
       - _Acción:_ Modificar `apps/backend/src/main.ts` para incluir `rawBody: true` en la configuración de `NestFactory.create`.
       - _Objetivo:_ Permitir que `svix` acceda al cuerpo crudo de la solicitud para la verificación de la firma.
