@@ -7,7 +7,10 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger'; // Importar Sw
 import { ClerkAuthGuard } from './auth/guards/clerk-auth.guard'; // Importa ClerkAuthGuard
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule, { bufferLogs: true });
+  const app = await NestFactory.create(AppModule, {
+    bufferLogs: true,
+    rawBody: true,
+  });
   app.useGlobalPipes(new ValidationPipe());
   app.useLogger(app.get(Logger));
   app.useGlobalInterceptors(new LoggerInterceptor()); // Registrar el interceptor globalmente

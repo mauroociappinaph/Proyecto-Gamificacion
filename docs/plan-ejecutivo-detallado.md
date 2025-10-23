@@ -490,15 +490,17 @@ open-aware (v1.0.0) - active (up to date)
       2. `write_file` para crear `auth.service.ts`, `clerk-auth.guard.ts` y `public.decorator.ts`.
       3. `replace` para actualizar `clerk.strategy.ts`, `auth.module.ts`, `app.module.ts` y `main.ts`.
 
-  - [ ] **T-AUTH-CLERK-01.5: Sincronización de Usuarios (Webhook).**
     - _Objetivo:_ Configurar y procesar webhooks de Clerk para mantener la base de datos local sincronizada con los usuarios de Clerk.
 
-    - [ ] **T-AUTH-CLERK-01.5.1: Configuración del Webhook en Clerk (Manual).**
+  - [x] **T-AUTH-CLERK-01.5: Sincronización de Usuarios (Webhook).**
+    - _Acción:_ Copiar y guardar el "Webhook Secret" de Clerk.
+
+    - [x] **T-AUTH-CLERK-01.5.1: Configuración del Webhook en Clerk (Manual).**
+      - _Nota:_ Detalles de la configuración y el Webhook Secret se encuentran en `docs/clerkyably.md`.
       - _Acción:_ Crear un endpoint de webhook en el Dashboard de Clerk.
       - _Acción:_ Seleccionar los eventos a los que suscribirse (`user.created`, `user.updated`, `user.deleted`).
-      - _Acción:_ Copiar y guardar el "Webhook Secret" de Clerk.
 
-    - [ ] **T-AUTH-CLERK-01.5.2: Configuración del Entorno en NestJS.**
+    - [x] **T-AUTH-CLERK-01.5.2: Configuración del Entorno en NestJS.**
       - _Acción:_ Añadir `CLERK_WEBHOOK_SECRET` al archivo `.env` del backend.
         - _MCP-Tool:_ `fast_filesystem.fast_write_file`
       - _Acción:_ Instalar dependencias: `svix` y `@types/svix`.
@@ -507,14 +509,14 @@ open-aware (v1.0.0) - active (up to date)
       - _Acción:_ Asegurar que `ConfigModule` esté configurado para cargar variables de entorno.
         - _MCP-Tool:_ `default_api.read_file`
 
-    - [ ] **T-AUTH-CLERK-01.5.3: Creación del Módulo y Controlador de Webhook.**
+    - [x] **T-AUTH-CLERK-01.5.3: Creación del Módulo y Controlador de Webhook.**
       - _Acción:_ Generar un módulo `WebhooksModule` y un controlador `ClerkController` en el backend.
         - _MCP-Tool:_ `default_api.run_shell_command` (Comando: `pnpm --filter backend exec nest generate module webhooks` y `pnpm --filter backend exec nest generate controller webhooks/clerk`)
       - _Acción:_ Importar `WebhooksModule` en `AppModule`.
         - _MCP-Tool:_ `default_api.read_file` (para leer `apps/backend/src/app.module.ts`)
         - _MCP-Tool:_ `fast_filesystem.fast_edit_block` (para añadir la importación y la entrada en el array `imports`)
 
-    - [ ] **T-AUTH-CLERK-01.5.4: Implementación de la Lógica de Verificación y Procesamiento.**
+    - [x] **T-AUTH-CLERK-01.5.4: Implementación de la Lógica de Verificación y Procesamiento.**
       - _Acción:_ En `ClerkController`, implementar el endpoint `POST /webhooks/clerk`.
       - _Acción:_ Usar `svix` para verificar la firma del webhook con `CLERK_WEBHOOK_SECRET`.
       - _Acción:_ Parsear el evento de Clerk y usar un `switch` para manejar los tipos de evento (`user.created`, `user.updated`, `user.deleted`).
@@ -525,14 +527,13 @@ open-aware (v1.0.0) - active (up to date)
           - **Paso 2 (Búsqueda Semántica):** Usar `open-aware.get_context` o `open-aware.ask` con `query: 'How to implement Clerk webhook with svix in a NestJS controller'` para obtener ejemplos de código contextuales y explicaciones.
           - **Paso 3 (Investigación Profunda):** Si los resultados anteriores no son suficientes, usar `open-aware.deep_research` para un análisis más exhaustivo de los repositorios más prometedores.
         - **Implementación:** `fast-filesystem.fast_edit_block` para escribir la lógica del controlador en `apps/backend/src/webhooks/clerk.controller.ts` basándose en la investigación.
-
-    - [ ] **T-AUTH-CLERK-01.5.5: Habilitar `rawBody` en NestJS.**
+    - [x] **T-AUTH-CLERK-01.5.5: Habilitar `rawBody` en NestJS.**
       - _Acción:_ Modificar `apps/backend/src/main.ts` para incluir `rawBody: true` en la configuración de `NestFactory.create`.
       - _Objetivo:_ Permitir que `svix` acceda al cuerpo crudo de la solicitud para la verificación de la firma.
       - _MCP-Tool-Flow:_
         - **Implementación:** `fast-filesystem.fast_edit_block` para modificar `apps/backend/src/main.ts`.
 
-    - [ ] **T-AUTH-CLERK-01.5.6: Pruebas Locales con `ngrok` (Opcional, para desarrollo).**
+    - [x] **T-AUTH-CLERK-01.5.6: Pruebas Locales con `ngrok` (Opcional, para desarrollo).**
       - _Acción:_ Instalar y configurar `ngrok`.
       - _Acción:_ Exponer el endpoint local del webhook a internet usando `ngrok`.
       - _Acción:_ Actualizar la URL del endpoint en el Dashboard de Clerk con la URL de `ngrok`.
@@ -920,6 +921,33 @@ Para la versión v0.2.0 o superior, se podrá evaluar migrar a **Nakama** si se 
     - [ ] Verificar que el `sitemap.xml` y `robots.txt` se generan correctamente en el entorno de desarrollo.
     - [ ] Usar las herramientas de desarrollador del navegador para inspeccionar los metatags en las páginas clave.
   - [ ] **T-FE-08.7:** Hacer commit, push y crear PR.
+
+---
+
+### **T-INFRA-MVP-01: Despliegue Inicial del Backend y Base de Datos**
+
+**Objetivo:** Poner en línea el backend y la base de datos en un entorno de `staging` (usando Render y MongoDB Atlas) para permitir pruebas de integración E2E con el frontend.
+
+- [ ] **T-INFRA-MVP-01.1: Configurar la Base de Datos en MongoDB Atlas.**
+  - _Acción:_ Crear una cuenta gratuita en MongoDB Atlas.
+  - _Acción:_ Crear un cluster gratuito (M0).
+  - _Acción:_ Configurar el acceso a la red (permitir acceso desde cualquier IP `0.0.0.0/0` para empezar) y crear un usuario de base de datos.
+  - _Acción:_ Obtener la URI de conexión.
+
+- [ ] **T-INFRA-MVP-01.2: Desplegar el Backend en Render.**
+  - _Acción:_ Crear una cuenta en Render y conectarla al repositorio de GitHub.
+  - _Acción:_ Crear un nuevo "Web Service" y apuntarlo a tu repositorio, seleccionando la rama `develop`.
+  - _Acción:_ Configurar el servicio para que use el `Dockerfile` de la carpeta `apps/backend`.
+  - _Acción:_ Añadir las variables de entorno en el dashboard de Render (`MONGO_URI` de Atlas, `CLERK_SECRET_KEY`, `CLERK_WEBHOOK_SECRET`, etc.).
+
+- [ ] **T-INFRA-MVP-01.3: Verificar el Despliegue.**
+  - _Acción:_ Revisar los logs de despliegue en Render para asegurar que la construcción y el inicio fueron exitosos.
+  - _Acción:_ Acceder a la URL pública proporcionada por Render (ej. `https://tu-backend.onrender.com`) para verificar que responde.
+  - _Acción:_ Actualizar la URL del webhook en el dashboard de Clerk para que apunte a la nueva URL de Render.
+
+- _MCP-Tool-Flow (para verificación):_
+  - **Paso 1 (Verificar Endpoint):** Una vez desplegado, usar `default_api.web_fetch` con la `prompt` apuntando a la URL pública del backend (ej. `https://tu-backend.onrender.com/`) para confirmar que está en línea y responde.
+  - **Paso 2 (Alternativa con cURL):** Si `web_fetch` falla, usar `default_api.run_shell_command` con `command: 'curl -I https://tu-backend.onrender.com/'` para verificar los encabezados de respuesta y el código de estado.
 
 ---
 
