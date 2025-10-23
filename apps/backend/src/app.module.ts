@@ -7,6 +7,9 @@ import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
 import { AblyModule } from './ably/ably.module';
 import { WebhooksModule } from './webhooks/webhooks.module';
+import { GamesModule } from './games/games.module';
+import { TasksModule } from './tasks/tasks.module';
+import { RewardsModule } from './rewards/rewards.module';
 
 @Module({
   imports: [
@@ -67,6 +70,9 @@ import { WebhooksModule } from './webhooks/webhooks.module';
       }),
     }),
     WebhooksModule,
+    GamesModule,
+    TasksModule,
+    RewardsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

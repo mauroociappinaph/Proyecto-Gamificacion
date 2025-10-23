@@ -542,28 +542,28 @@ open-aware (v1.0.0) - active (up to date)
         - **Pruebas (Alternativa a ngrok):** `postman.createCollection` y `postman.createCollectionRequest` para simular los eventos de webhook de Clerk localmente.
         - **Pruebas (Automatizadas):** `TestSprite.generate_backend_test_plan` y `TestSprite.generate_code_and_execute` para crear y correr tests automatizados del endpoint.
 
-- [ ] **T-BE-GAME-01: Módulos de Juegos, Tareas y Recompensas.**
+- [x] **T-BE-GAME-01: Módulos de Juegos, Tareas y Recompensas.**
   - _Objetivo General:_ Desarrollar el núcleo de la lógica de gamificación, incluyendo la gestión de juegos, la completitud de tareas y la asignación de recompensas, basándose en los requerimientos `R-003` y `R-004`.
 
-  - [ ] **T-BE-GAME-01.1: Generar Módulos, Controladores y Servicios.**
+  - [x] **T-BE-GAME-01.1: Generar Módulos, Controladores y Servicios.**
     - _Acción:_ Crear la estructura de carpetas y archivos base para los módulos `games`, `tasks`, y `rewards`.
     - _MCP-Tool:_ `run_shell_command`
     - _Comando:_ `pnpm --filter backend exec nest g module games && pnpm --filter backend exec nest g controller games && pnpm --filter backend exec nest g service games` (repetir para `tasks` y `rewards`).
 
-  - [ ] **T-BE-GAME-01.2: Definir Schemas y DTOs en `common-types`.**
+  - [x] **T-BE-GAME-01.2: Definir Schemas y DTOs en `common-types`.**
     - _Acción:_ Basado en `Documento de requerimientos #006 V2.docx.pdf` (páginas 19-21) y `arquitectura-tecnica.md`, definir las interfaces TypeScript para `Game`, `Task`, y `Reward` en el paquete `packages/common-types`.
     - _MCP-Tool-Flow:_
       - **1. Implementación:** Usar `fast_filesystem.fast_write_file` para crear/actualizar los archivos de interfaz (ej. `packages/common-types/src/interfaces/game.interface.ts`).
       - **2. Verificación:** Usar `fast_filesystem.fast_read_file` para confirmar que los tipos exportados en el `index.ts` del paquete son correctos.
 
-  - [ ] **T-BE-GAME-01.3: Implementar los Schemas de Mongoose.**
+  - [x] **T-BE-GAME-01.3: Implementar los Schemas de Mongoose.**
     - _Acción:_ Convertir las interfaces del paso anterior en Schemas de Mongoose funcionales dentro de cada módulo respectivo.
     - _MCP-Tool-Flow:_
       - **1. Investigación:** Usar `open-aware.get_context` con `query: "Mongoose schema with enums and nested objects in NestJS"` para ver las mejores prácticas.
       - **2. Implementación:** Usar `fast_filesystem.fast_write_file` para crear los archivos de schema (ej. `apps/backend/src/modules/games/schemas/game.schema.ts`).
       - **3. Registro:** Usar `fast_filesystem.fast_edit_block` para importar y registrar los schemas en sus respectivos módulos (ej. en `games.module.ts` usando `MongooseModule.forFeature([...])`).
 
-  - [ ] **T-BE-GAME-01.4: Implementar la Lógica de Negocio en los Servicios.**
+  - [x] **T-BE-GAME-01.4: Implementar la Lógica de Negocio en los Servicios.**
     - _Acción:_ Codificar la lógica principal en las clases de servicio.
     - _Subtareas:_
       - **GamesService:** Implementar métodos CRUD para la gestión de juegos.
@@ -573,7 +573,7 @@ open-aware (v1.0.0) - active (up to date)
       - **1. Investigación:** Usar `open-aware.ask` con `query: "How to handle business logic for a task completion event in a NestJS service"` para obtener un enfoque claro.
       - **2. Implementación:** Usar `fast_filesystem.fast_edit_block` para añadir los métodos a los archivos de servicio correspondientes.
 
-  - [ ] **T-BE-GAME-01.5: Implementar los Endpoints en los Controladores.**
+  - [x] **T-BE-GAME-01.5: Implementar los Endpoints en los Controladores.**
     - _Acción:_ Exponer la lógica de los servicios a través de los endpoints RESTful definidos en `arquitectura-tecnica.md`.
     - _Subtareas:_
       - **GamesController:** Endpoints públicos para listar/ver juegos. Endpoints de admin para gestionarlos.
