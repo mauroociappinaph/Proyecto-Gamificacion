@@ -26,7 +26,7 @@ export class RewardsService {
     }
 
     if (userTask.status !== 'completed' || userTask.reward) {
-      throw new Error('Reward cannot be claimed.');
+      throw new NotFoundException('Reward cannot be claimed.'); // Changed to NotFoundException
     }
 
     const task = await this.taskModel.findById(userTask.taskId).exec();

@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Game, GameDocument } from './schemas/game.schema';
@@ -19,16 +19,28 @@ export class GamesService {
   }
 
   async findOne(id: string): Promise<Game> {
-    return this.gameModel.findById(id).exec();
+    const game = await this.gameModel.findById(id).exec();
+    if (!game) {
+      throw new NotFoundException(`Game with ID ${id} not found`);
+    }
+    return game;
   }
 
   async update(id: string, updateGameDto: UpdateGameDto): Promise<Game> {
-    return this.gameModel
+    const game = await this.gameModel
       .findByIdAndUpdate(id, updateGameDto, { new: true })
       .exec();
+    if (!game) {
+      throw new NotFoundException(`Game with ID ${id} not found`);
+    }
+    return game;
   }
 
   async remove(id: string): Promise<Game> {
-    return this.gameModel.findByIdAndRemove(id).exec();
+    const game = await this.gameModel.findByIdAndDelete(id).exec();
+    if (!game) {
+      throw new NotFoundException(`Game with ID ${id} not found`);
+    }
+    return game;
   }
 }

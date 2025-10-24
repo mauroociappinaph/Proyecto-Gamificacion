@@ -4,7 +4,7 @@ import { getModelToken } from '@nestjs/mongoose';
 import { Game } from './schemas/game.schema';
 import { Model } from 'mongoose';
 
-const mockGame = {
+const mockGame: any = {
   title: 'Test Game',
   description: 'Test Description',
   category: 'Test Category',
@@ -16,6 +16,27 @@ const mockGame = {
   },
   isActive: true,
 };
+mockGame.save = jest.fn().mockResolvedValue(mockGame);
+
+// Mock GameModel class
+class MockGameModel {
+  constructor(public data?: any) {} // Made data public
+  save() {
+    return jest.fn().mockResolvedValue(this.data)();
+  } // Defined as regular method
+  static find = jest
+    .fn()
+    .mockReturnValue({ exec: jest.fn().mockResolvedValue([mockGame]) });
+  static findById = jest
+    .fn()
+    .mockReturnValue({ exec: jest.fn().mockResolvedValue(mockGame) });
+  static findByIdAndUpdate = jest
+    .fn()
+    .mockReturnValue({ exec: jest.fn().mockResolvedValue(mockGame) });
+  static findByIdAndDelete = jest
+    .fn()
+    .mockReturnValue({ exec: jest.fn().mockResolvedValue(mockGame) });
+}
 
 describe('GamesService', () => {
   let service: GamesService;
@@ -27,16 +48,7 @@ describe('GamesService', () => {
         GamesService,
         {
           provide: getModelToken(Game.name),
-          useValue: {
-            new: jest.fn().mockResolvedValue(mockGame),
-            constructor: jest.fn().mockResolvedValue(mockGame),
-            find: jest.fn(),
-            findById: jest.fn(),
-            findByIdAndUpdate: jest.fn(),
-            findByIdAndRemove: jest.fn(),
-            exec: jest.fn(),
-            save: jest.fn(),
-          },
+          useValue: MockGameModel, // Provide the mock class
         },
       ],
     }).compile();
@@ -50,6 +62,7 @@ describe('GamesService', () => {
   });
 
   it('should create a new game', async () => {
+    // No need to spy on constructor here, as it's handled by MockGameModel
     const newGame = await service.create(mockGame as any);
     expect(newGame).toEqual(mockGame);
   });
@@ -82,7 +95,7 @@ describe('GamesService', () => {
   });
 
   it('should delete a game', async () => {
-    jest.spyOn(model, 'findByIdAndRemove').mockReturnValue({
+    jest.spyOn(model, 'findByIdAndDelete').mockReturnValue({
       exec: jest.fn().mockResolvedValueOnce(mockGame),
     } as any);
     const game = await service.remove('someId');

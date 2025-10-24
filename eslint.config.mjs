@@ -39,10 +39,10 @@ export default tseslint.config(
     },
     ignores: ["apps/backend/dist/"],
   },
-  ...compat.extends("next/core-web-vitals"),
   {
     // Frontend-specific configurations
     files: ["apps/frontend/**/*.{js,jsx,ts,tsx}"],
+    ...compat.extends("next/core-web-vitals")[0], // Apply Next.js rules only to frontend files
     languageOptions: {
       parserOptions: {
         project: true,
