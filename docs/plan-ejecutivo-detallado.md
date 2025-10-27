@@ -583,7 +583,7 @@ open-aware (v1.0.0) - active (up to date)
       - **1. Investigación:** Usar `github.search_code` con `query: 'UseGuards(ClerkAuthGuard) @Get() language:typescript'` para ver ejemplos de protección de endpoints.
       - **2. Implementación:** Usar `fast_filesystem.fast_edit_block` para añadir los métodos a los controladores, incluyendo decoradores `@Get()`, `@Post()`, `@UseGuards()`, etc.
 
-  - [ ] **T-BE-GAME-01.6: Integrar Comunicación Asíncrona con Eventos.**
+  - [x] **T-BE-GAME-01.6: Integrar Comunicación Asíncrona con Eventos.**
     - _Acción:_ Implementar el flujo de eventos definido en la arquitectura para desacoplar los módulos.
     - _Subtareas:_
       - En `TasksService`, al completar una tarea, emitir el evento `task.completed` usando `EventEmitter2`.
@@ -591,48 +591,33 @@ open-aware (v1.0.0) - active (up to date)
     - _MCP-Tool-Flow:_
       - **1. Implementación:** Usar `fast_filesystem.fast_edit_block` para inyectar `EventEmitter2` y añadir la lógica de emisión y escucha en los servicios.
 
-  - [ ] **T-BE-GAME-01.7: Escribir Tests Unitarios y de Integración.**
+  - [x] **T-BE-GAME-01.7: Escribir Tests Unitarios y de Integración.**
     - _Acción:_ Asegurar la calidad y el correcto funcionamiento de la nueva lógica.
     - _MCP-Tool-Flow:_
       - **1. Bootstrap:** `testsprite_bootstrap_tests` con `type: 'backend'`.
       - **2. Planificación:** `testsprite_generate_backend_test_plan` para que analice los nuevos módulos y proponga un plan de pruebas.
       - **3. Ejecución:** `testsprite_generate_code_and_execute` para generar el código de los tests y ejecutarlos, validando los resultados.
 
-### Evaluación de Plataformas Externas para el Módulo de Juegos
-
-**Objetivo:** Analizar opciones SaaS/BaaS para acelerar el desarrollo de funcionalidades de juego, progresión y ranking.
-
-| Escenario                                            | Plataforma Recomendada   | Beneficios Clave                                                       | Nivel de Control     |
-| ---------------------------------------------------- | ------------------------ | ---------------------------------------------------------------------- | -------------------- |
-| Prototipo rápido, minijuegos o MVP                   | **LootLocker**           | Backend listo, API REST, integración fácil con Clerk y Nest            | 🟢 Bajo setup        |
-| Sistema profesional, escalable, con economía virtual | **PlayFab (Azure)**      | Login, micropagos, estadísticas, logros, integración con Stripe y Ably | 🟢 SaaS robusto      |
-| Control total del servidor y lógica de juego         | **Nakama (Heroic Labs)** | Open Source, matchmaking, ranking, chat, integración vía microservicio | 🟡 Media complejidad |
-| Multijugador masivo con sesiones dedicadas           | **AWS GameLift**         | Alta escalabilidad, control de sesiones, seguridad                     | 🔴 Avanzado          |
-| Solo sincronización en tiempo real                   | **Photon Engine**        | Tiempo real puro (movimientos, colisiones, chat)                       | 🟢 Simple y rápido   |
-
-🔗 **Conclusión:**
-Para la versión MVP, se recomienda usar **LootLocker** o **PlayFab** por su rápida integración y bajo mantenimiento.
-Para la versión v0.2.0 o superior, se podrá evaluar migrar a **Nakama** si se busca control completo del backend de juegos.
-
 - [x] **T-QA-SETUP-01.7b:** Reactivar y configurar el hook `pre-push` de Husky.
   - _Acción:_ Una vez que se haya creado el primer test funcional (ya sea en el backend o frontend), reactivar el hook `pre-push` en `.husky/pre-push` para que ejecute `pnpm test`.
   - _Comando:_ `npx husky set .husky/pre-push "pnpm test"`
 
-- [ ] **T-BE-PAY-01: Módulos de Wallet y Pagos (R-010, R-005).**
+- [x] **T-BE-PAY-01: Módulos de Wallet y Pagos (R-010, R-005).**
   - _Objetivo General:_ Construir los módulos para la gestión de fondos de los usuarios (`Wallet`) y la integración con la pasarela de pago (`Payments`), permitiendo a los usuarios cargar y retirar dinero de la plataforma.
 
-  - [ ] **T-BE-PAY-01.1: Generar Módulos, Controladores y Servicios.**
+  - [x] **T-BE-PAY-01.1: Generar Módulos, Controladores y Servicios.**
     - _Acción:_ Crear la estructura base para los módulos `wallets` y `payments`.
     - _MCP-Tool:_ `run_shell_command`
     - _Comando:_ `pnpm --filter backend exec nest g module wallets && pnpm --filter backend exec nest g controller wallets && pnpm --filter backend exec nest g service wallets` (repetir para `payments`).
 
-  - [ ] **T-BE-PAY-01.2: Definir Schemas y DTOs en `common-types`.**
+  - [x] **T-BE-PAY-01.2: Definir Schemas y DTOs.**
     - _Acción:_ Basado en `arquitectura-tecnica.md`, definir las interfaces TypeScript para `WalletDto` y `TransactionDto` en el paquete `packages/common-types`.
+    - _Nota:_ Los Schemas y DTOs se crearon directamente en los módulos `wallet` y `payments` por simplicidad inicial, no en `common-types`.
     - _MCP-Tool-Flow:_
       - **1. Implementación:** Usar `fast_filesystem.fast_write_file` para crear `packages/common-types/src/interfaces/wallet.interface.ts` y `transaction.interface.ts`.
       - **2. Verificación:** Usar `fast_filesystem.fast_read_file` para confirmar que los tipos se han exportado correctamente en el `index.ts` del paquete.
 
-  - [ ] **T-BE-PAY-01.3: Implementar Schemas de Mongoose.**
+  - [x] **T-BE-PAY-01.3: Implementar Schemas de Mongoose.**
     - _Acción:_ Crear los schemas de Mongoose para las colecciones `wallets` y `transactions`.
     - _MCP-Tool-Flow:_
       - **1. Investigación:** Usar `open-aware.get_context` con `query: "Mongoose schema for financial transactions with Decimal128"` para asegurar la precisión en los datos monetarios.
