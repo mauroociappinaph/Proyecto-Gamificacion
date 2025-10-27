@@ -10,6 +10,8 @@ import { WebhooksModule } from './webhooks/webhooks.module';
 import { GamesModule } from './games/games.module';
 import { TasksModule } from './tasks/tasks.module';
 import { RewardsModule } from './rewards/rewards.module';
+import { WalletModule } from './wallet/wallet.module';
+import { PaymentsModule } from './payments/payments.module';
 
 @Module({
   imports: [
@@ -73,6 +75,8 @@ import { RewardsModule } from './rewards/rewards.module';
     GamesModule,
     TasksModule,
     RewardsModule,
+    WalletModule,
+    PaymentsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
