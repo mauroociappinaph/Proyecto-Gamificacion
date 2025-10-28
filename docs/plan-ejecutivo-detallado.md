@@ -624,7 +624,7 @@ open-aware (v1.0.0) - active (up to date)
       - **2. Implementación:** Usar `fast_filesystem.fast_write_file` para crear los archivos `wallet.schema.ts` y `transaction.schema.ts` en sus respectivos módulos.
       - **3. Registro:** Usar `fast_filesystem.fast_edit_block` para importar y registrar los schemas en `wallets.module.ts` y `payments.module.ts`.
 
-  - [ ] **T-BE-PAY-01.4: Instalar e Integrar el SDK de Stripe.**
+  - [x] **T-BE-PAY-01.4: Instalar e Integrar el SDK de Stripe.**
     - _Acción:_ Añadir y configurar el SDK oficial de Stripe.
     - _MCP-Tool-Flow:_
       - **1. Instalación:** `run_shell_command` con `pnpm --filter backend add stripe`.
